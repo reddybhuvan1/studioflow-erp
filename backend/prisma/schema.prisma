@@ -1,0 +1,208 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Enums
+enum UserRole {
+  admin
+  employee
+}
+
+enum LeadStatus {
+  NEW_LEAD
+  CONTACTED
+  QUOTED
+  FOLLOWED_UP
+  LOST
+}
+
+enum JobType {
+  WEDDING
+  PORTRAIT
+  CORPORATE
+  FAMILY
+  EVENT
+  OTHER
+}
+
+enum WorkflowStage {
+  INTAKE
+  PHOTOGRAPHY
+  EDITING
+  PAYMENT
+  DELIVERY
+  CLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
+enum ExpenseCategory {
+  RENT
+  ELECTRICITY
+  WIFI
+  WATER
+  MAINTENANCE
+  EQUIPMENT
+  OTHER
+}
+
+enum EquipmentCategory {
+  CAMERA
+  LENS
+  LIGHTING
+  AUDIO
+  ACCESSORY
+  OTHER
+}
+
+enum EquipmentCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum EquipmentStatus {
+  AVAILABLE
+  IN_USE
+  MAINTENANCE
+  LOST
+}
+
+// Models
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id            String    @id @default(uuid())
+  name          String
+  contactNumber String
+  email         String    @unique
+  referredBy    String?
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Employee {
+  id            String   @id @default(uuid())
+  name          String
+  role          String
+  accountNumber String
+  ifsc          String
+  branchName    String
+  joiningDate   String
+  salary        String
+  currentSalary String
+  email         String?  @unique
+  password      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Freelancer {
+  id            String              @id @default(uuid())
+  name          String
+  role          String
+  contactNumber String
+  accountNumber String?
+  ifsc          String?
+  branchName    String?
+  payments      FreelancerPayment[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}
+
+model Lead {
+  id            String   @id @default(uuid())
+  name          String
+  email         String
+  contactNumber String
+  type          JobType
+  shootDate     String
+  status        LeadStatus
+  nextTask      String
+  notes         String
+  referredBy    String?
+  events        Json?    // Storing {name, date}[] as JSON for simplicity
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  jobs          Job[]
+}
+
+model Job {
+  id               String   @id @default(uuid())
+  leadId           String?
+  clientId         String?
+  name             String
+  type             JobType
+  shootDate        String
+  workflowProgress Int      @default(0) // 0-100
+  nextTask         String
+  notes            String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  lead             Lead?    @relation(fields: [leadId], references: [id])
+}
+
+model Session {
+  id            String        @id @default(uuid())
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id])
+  events        Json          // Storing ProjectEvent[] as JSON
+  quotation     String
+  grandTotal    Float
+  stage         WorkflowStage
+  editingStatus Json          // Storing {photos, videos}
+  isPaid        Boolean       @default(false)
+  isDelivered   Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model FreelancerPayment {
+  id           String        @id @default(uuid())
+  freelancerId String
+  freelancer   Freelancer    @relation(fields: [freelancerId], references: [id])
+  sessionId    String
+  eventName    String
+  eventDate    String
+  amount       Float
+  status       PaymentStatus @default(PENDING)
+  paymentDate  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Expense {
+  id          String          @id @default(uuid())
+}
+
+model Equipment {
+  id            String             @id @default(uuid())
+  name          String
+  category      EquipmentCategory
+  serialNumber  String?
+  purchaseDate  String
+  purchasePrice Float
+  condition     EquipmentCondition
+  status        EquipmentStatus    @default(AVAILABLE)
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
