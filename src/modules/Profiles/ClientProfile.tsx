@@ -214,12 +214,13 @@ export function ClientProfile() {
                                     </div>
                                         <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground">
                                             <div className="p-1.5 bg-secondary rounded-lg"><Calendar size={14} className="text-primary" /></div>
-                                            {client.history.length || sessions.filter(s => s.clientId === client.id).length} Previous Sessions
+                                            {sessions.filter(s => s.clientId === client.id).length} Previous Sessions
                                         </div>
                                         {(() => {
                                             const clientSessions = sessions.filter((s: Session) => s.clientId === client.id);
                                             const totalGB = clientSessions.reduce((acc: number, sess: Session) => {
-                                                const sessTotal = (sess.events || []).reduce((sum: number, ev: ProjectEvent) => sum + (ev.dataSizeGB || 0), 0);
+                                                const sessEvents: ProjectEvent[] = Array.isArray(sess.events) ? sess.events : [];
+                                                const sessTotal = sessEvents.reduce((sum: number, ev: ProjectEvent) => sum + (ev.dataSizeGB || 0), 0);
                                                 return acc + sessTotal;
                                             }, 0);
                                             
