@@ -171,8 +171,21 @@ model Session {
   editingStatus Json          // Storing {photos, videos}
   isPaid        Boolean       @default(false)
   isDelivered   Boolean       @default(false)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  payments      ClientPayment[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model ClientPayment {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  amount    Float
+  date      String
+  method    String?  // Cash, UPI, Bank Transfer, etc.
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FreelancerPayment {

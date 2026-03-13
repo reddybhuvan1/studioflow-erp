@@ -2,6 +2,8 @@ import { useApp } from '../../hooks/AppContext';
 import { ArrowRight, CheckCircle2, CheckCircle, Plus, Camera, Edit3, CreditCard, Send, Archive } from 'lucide-react';
 import type { WorkflowStage, Session } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PaymentModal } from './PaymentModal';
+import { useState } from 'react';
 
 const STAGES: WorkflowStage[] = ['Intake', 'Photography', 'Editing', 'Payment', 'Delivery'];
 
@@ -17,6 +19,7 @@ const STAGE_ICONS: Record<string, any> = {
 export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
     const { sessions, clients, updateSession, deleteSession, user } = useApp();
     const isAdmin = user?.role === 'admin';
+    const [activePaymentSession, setActivePaymentSession] = useState<Session | null>(null);
 
     const getClientName = (id: string) => clients.find(c => c.id === id)?.name || 'Unknown Client';
 
@@ -40,8 +43,11 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                 }
             }
 
-            if (session.stage === 'Payment' && !session.isPaid) {
-                return alert('Payment must be verified to proceed.');
+            if (session.stage === 'Payment') {
+                const totalPaid = (session.payments || []).reduce((sum, p) => sum + p.amount, 0);
+                if (totalPaid < session.grandTotal) {
+                    return alert('Full payment must be logged to proceed to Delivery.');
+                }
             }
 
             updateSession(session.id, { stage: STAGES[currentIndex + 1] });
@@ -233,16 +239,17 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                                                 className="mt-4"
                                                             >
                                                                 <button
-                                                                    onClick={() => updateSession(session.id, { isPaid: !session.isPaid })}
-                                                                    className={`px-6 py-2 border text-[9px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${session.isPaid
+                                                                    onClick={() => setActivePaymentSession(session)}
+                                                                    className={`px-6 py-2 border text-[9px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${
+                                                                        ((session.payments || []).reduce((sum, p) => sum + p.amount, 0) >= session.grandTotal)
                                                                             ? 'bg-black text-white border-black'
                                                                             : 'bg-white border-zinc-200 text-zinc-400 hover:border-black'
-                                                                        }`}
+                                                                    }`}
                                                                 >
-                                                                    {session.isPaid ? (
-                                                                        <><CheckCircle size={14} /> Verified</>
+                                                                    {((session.payments || []).reduce((sum, p) => sum + p.amount, 0) >= session.grandTotal) ? (
+                                                                        <><CheckCircle size={14} /> Full Paid</>
                                                                     ) : (
-                                                                        <><CreditCard size={14} /> Confirm</>
+                                                                        <><CreditCard size={14} /> Log Payment</>
                                                                     )}
                                                                 </button>
                                                             </motion.div>
@@ -258,6 +265,15 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                     )}
                 </AnimatePresence>
             </div>
+
+            <AnimatePresence>
+                {activePaymentSession && (
+                    <PaymentModal 
+                        session={sessions.find(s => s.id === activePaymentSession.id)!} 
+                        onClose={() => setActivePaymentSession(null)} 
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }

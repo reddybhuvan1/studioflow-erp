@@ -97,8 +97,8 @@ app.delete('/api/jobs/:id', async (req: any, res: any) => {
 });
 
 // Sessions
-app.get('/api/sessions', async (req, res) => {
-  const sessions = await prisma.session.findMany({ include: { client: true } });
+app.get('/api/sessions', async (req: any, res: any) => {
+  const sessions = await prisma.session.findMany({ include: { client: true, payments: true } });
   res.json(sessions);
 });
 
@@ -199,6 +199,18 @@ app.put('/api/freelancer-payments/:id', async (req: any, res: any) => {
 
 app.delete('/api/freelancer-payments/:id', async (req: any, res: any) => {
   await prisma.freelancerPayment.delete({ where: { id: req.params.id } });
+  res.json({ success: true });
+});
+
+// Client Payments
+app.post('/api/client-payments', async (req: any, res: any) => {
+  const { session, ...data } = req.body;
+  const payment = await prisma.clientPayment.create({ data });
+  res.json(payment);
+});
+
+app.delete('/api/client-payments/:id', async (req: any, res: any) => {
+  await prisma.clientPayment.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
 

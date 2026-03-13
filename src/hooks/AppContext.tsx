@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, Expense, Equipment } from '../types';
+import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, ClientPayment, Expense, Equipment } from '../types';
 import { api } from '../api';
 
 interface AppContextType extends AppState {
@@ -13,6 +13,8 @@ interface AppContextType extends AppState {
     createSession: (session: Session) => void;
     updateSession: (id: string, updates: Partial<Session>) => void;
     deleteSession: (id: string) => void;
+    addClientPayment: (payment: ClientPayment) => void;
+    deleteClientPayment: (id: string) => void;
     login: (email: string, password?: string) => boolean;
     logout: () => void;
     generateCredentials: (employeeId: string) => { email: string; password: string };
@@ -130,6 +132,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const deleteSession = (id: string) => {
         setSessions(prev => prev.filter(s => s.id !== id));
         api.delete(`/sessions/${id}`).catch(console.error);
+    };
+
+    const addClientPayment = (payment: ClientPayment) => {
+        setSessions(prev => prev.map(s => {
+            if (s.id === payment.sessionId) {
+                return { ...s, payments: [...(s.payments || []), payment] };
+            }
+            return s;
+        }));
+        api.post('/client-payments', payment).catch(console.error);
+    };
+
+    const deleteClientPayment = (id: string) => {
+        setSessions(prev => prev.map(s => {
+            if (s.payments && s.payments.some(p => p.id === id)) {
+                return { ...s, payments: s.payments.filter(p => p.id !== id) };
+            }
+            return s;
+        }));
+        api.delete(`/client-payments/${id}`).catch(console.error);
     };
 
     const login = (email: string, password?: string): boolean => {
@@ -276,7 +298,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             clients, employees, sessions, user,
             addClient, updateClient, deleteClient,
             addEmployee, updateEmployee, deleteEmployee,
-            createSession, updateSession, deleteSession,
+            createSession, updateSession, deleteSession, addClientPayment, deleteClientPayment,
             login, logout, generateCredentials, resetCredentials,
             leads, addLead, updateLead, deleteLead,
             jobs, addJob, updateJob, deleteJob,

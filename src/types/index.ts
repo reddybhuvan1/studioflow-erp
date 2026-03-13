@@ -83,6 +83,15 @@ export interface FreelancerPayment {
   paymentDate?: string;
 }
 
+export interface ClientPayment {
+  id: string;
+  sessionId: string;
+  amount: number;
+  date: string;
+  method?: string;
+  notes?: string;
+}
+
 export type ExpenseCategory = 'Rent' | 'Electricity' | 'WiFi' | 'Water' | 'Maintenance' | 'Equipment' | 'Other';
 export type EquipmentCategory = 'CAMERA' | 'LENS' | 'LIGHTING' | 'AUDIO' | 'ACCESSORY' | 'OTHER';
 export type EquipmentCondition = 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
@@ -130,6 +139,7 @@ export interface Session {
   editingStatus: EditingStatus;
   isPaid: boolean;
   isDelivered: boolean;
+  payments: ClientPayment[];
 }
 
 export interface AppState {
