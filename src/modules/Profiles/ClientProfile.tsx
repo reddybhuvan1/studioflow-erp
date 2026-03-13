@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { useApp } from '../../hooks/AppContext';
-import type { Session, ProjectEvent } from '../../types';
-import { UserPlus, Search, Mail, Phone, Calendar, User, Edit2, Trash2, ExternalLink } from 'lucide-react';
+import type { Client, Session, ProjectEvent } from '../../types';
+import { UserPlus, Search, Mail, Phone, Calendar, User, Edit2, Trash2, ExternalLink, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ClientHistoryModal } from './ClientHistoryModal';
 
 export function ClientProfile() {
     const { clients, sessions, addClient, updateClient, deleteClient } = useApp();
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState<string | null>(null);
+    const [isCreating, setIsCreating] = useState(false);
+    const [editingClient, setEditingClient] = useState<Client | null>(null);
+    const [activeHistoryClient, setActiveHistoryClient] = useState<Client | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({ name: '', email: '', contactNumber: '', referredBy: '' });
 
     const handleEdit = (client: any) => {
         setFormData({ name: client.name, email: client.email, contactNumber: client.contactNumber, referredBy: client.referredBy || '' });
-        setEditingId(client.id);
-        setShowForm(true);
+        setEditingClient(client);
+        setIsCreating(true);
     };
 
     const handleDelete = (id: string) => {
@@ -25,8 +27,8 @@ export function ClientProfile() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (editingId) {
-            updateClient(editingId, formData);
+        if (editingClient) {
+            updateClient(editingClient.id, formData);
         } else {
             addClient({
                 id: Math.random().toString(36).substr(2, 9).toUpperCase(),
@@ -35,8 +37,8 @@ export function ClientProfile() {
             });
         }
         setFormData({ name: '', email: '', contactNumber: '', referredBy: '' });
-        setEditingId(null);
-        setShowForm(false);
+        setEditingClient(null);
+        setIsCreating(false);
     };
 
     const filteredClients = clients.filter(c =>
@@ -53,9 +55,9 @@ export function ClientProfile() {
                 </div>
                 <button
                     onClick={() => {
-                        setEditingId(null);
+                        setEditingClient(null);
                         setFormData({ name: '', email: '', contactNumber: '', referredBy: '' });
-                        setShowForm(!showForm);
+                        setIsCreating(!isCreating);
                     }}
                     className="h-14 px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4"
                 >
@@ -65,7 +67,7 @@ export function ClientProfile() {
             </header>
 
             <AnimatePresence>
-                {showForm && (
+                {isCreating && (
                     <motion.div
                         initial={{ opacity: 0, height: 0, y: -20 }}
                         animate={{ opacity: 1, height: 'auto', y: 0 }}
@@ -75,9 +77,9 @@ export function ClientProfile() {
                         <div className="card-premium p-8 border-primary/20 bg-primary/5">
                             <h3 className="text-xl font-black mb-6 flex items-center gap-2">
                                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                                    {editingId ? <Edit2 size={18} /> : <User size={18} />}
+                                    {editingClient ? <Edit2 size={18} /> : <User size={18} />}
                                 </div>
-                                {editingId ? 'Update Client Profile' : 'Client Onboarding'}
+                                {editingClient ? 'Update Client Profile' : 'Client Onboarding'}
                             </h3>
                             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
@@ -127,15 +129,15 @@ export function ClientProfile() {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            setShowForm(false);
-                                            setEditingId(null);
+                                            setIsCreating(false);
+                                            setEditingClient(null);
                                         }}
                                         className="px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button type="submit" className="btn-primary">
-                                        {editingId ? 'Save Changes' : 'Generate Profile'}
+                                        {editingClient ? 'Save Changes' : 'Generate Profile'}
                                     </button>
                                 </div>
                             </form>
@@ -212,10 +214,20 @@ export function ClientProfile() {
                                         <div className="p-1.5 bg-secondary rounded-lg"><Phone size={14} className="text-primary" /></div>
                                         {client.contactNumber}
                                     </div>
+                                    
+                                    <div className="flex items-center justify-between pt-2">
                                         <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground">
                                             <div className="p-1.5 bg-secondary rounded-lg"><Calendar size={14} className="text-primary" /></div>
                                             {sessions.filter(s => s.clientId === client.id).length} Previous Sessions
                                         </div>
+                                        
+                                        <button 
+                                            onClick={() => setActiveHistoryClient(client)}
+                                            className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/70 bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+                                        >
+                                            <Clock size={12} /> View History
+                                        </button>
+                                    </div>
                                         {(() => {
                                             const clientSessions = sessions.filter((s: Session) => s.clientId === client.id);
                                             const totalGB = clientSessions.reduce((acc: number, sess: Session) => {
@@ -257,7 +269,13 @@ export function ClientProfile() {
                     )}
                 </AnimatePresence>
             </div>
+            {activeHistoryClient && (
+                <ClientHistoryModal 
+                    client={activeHistoryClient}
+                    sessions={sessions.filter(s => s.clientId === activeHistoryClient.id)}
+                    onClose={() => setActiveHistoryClient(null)}
+                />
+            )}
         </div>
     );
 }
-
