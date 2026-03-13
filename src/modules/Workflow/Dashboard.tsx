@@ -1,8 +1,9 @@
 import { useApp } from '../../hooks/AppContext';
-import { ArrowRight, CheckCircle2, CheckCircle, Plus, Camera, Edit3, CreditCard, Send, Archive } from 'lucide-react';
+import { ArrowRight, CheckCircle2, CheckCircle, Plus, Camera, Edit3, CreditCard, Send, Archive, HardDrive } from 'lucide-react';
 import type { WorkflowStage, Session } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PaymentModal } from './PaymentModal';
+import { EquipmentLedgerModal } from './EquipmentLedgerModal';
 import { useState } from 'react';
 
 const STAGES: WorkflowStage[] = ['Intake', 'Photography', 'Editing', 'Payment', 'Delivery'];
@@ -20,6 +21,7 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
     const { sessions, clients, updateSession, deleteSession, user } = useApp();
     const isAdmin = user?.role === 'admin';
     const [activePaymentSession, setActivePaymentSession] = useState<Session | null>(null);
+    const [activeEquipmentSession, setActiveEquipmentSession] = useState<Session | null>(null);
 
     const getClientName = (id: string) => clients.find(c => c.id === id)?.name || 'Unknown Client';
 
@@ -151,6 +153,13 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
 
                                     <div className="flex items-center gap-4 shrink-0">
                                         <button
+                                            onClick={() => setActiveEquipmentSession(session)}
+                                            className="p-3 text-muted-foreground hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                                            title="View Equipment Ledger"
+                                        >
+                                            <HardDrive size={20} />
+                                        </button>
+                                        <button
                                             onClick={() => setActivePaymentSession(session)}
                                             className="p-3 text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
                                             title="View Payment Ledger"
@@ -279,6 +288,12 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                     <PaymentModal 
                         session={sessions.find(s => s.id === activePaymentSession.id)!} 
                         onClose={() => setActivePaymentSession(null)} 
+                    />
+                )}
+                {activeEquipmentSession && (
+                    <EquipmentLedgerModal
+                        session={sessions.find(s => s.id === activeEquipmentSession.id)!}
+                        onClose={() => setActiveEquipmentSession(null)}
                     />
                 )}
             </AnimatePresence>

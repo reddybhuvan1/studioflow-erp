@@ -98,7 +98,7 @@ app.delete('/api/jobs/:id', async (req: any, res: any) => {
 
 // Sessions
 app.get('/api/sessions', async (req: any, res: any) => {
-  const sessions = await prisma.session.findMany({ include: { client: true, payments: true } });
+  const sessions = await prisma.session.findMany({ include: { client: true, payments: true, clientEquipment: true } });
   res.json(sessions);
 });
 
@@ -211,6 +211,24 @@ app.post('/api/client-payments', async (req: any, res: any) => {
 
 app.delete('/api/client-payments/:id', async (req: any, res: any) => {
   await prisma.clientPayment.delete({ where: { id: req.params.id } });
+  res.json({ success: true });
+});
+
+// Client Equipment
+app.post('/api/client-equipment', async (req: any, res: any) => {
+  const { session, ...data } = req.body;
+  const eq = await prisma.clientEquipment.create({ data });
+  res.json(eq);
+});
+
+app.put('/api/client-equipment/:id', async (req: any, res: any) => {
+  const { session, ...data } = req.body;
+  const eq = await prisma.clientEquipment.update({ where: { id: req.params.id }, data });
+  res.json(eq);
+});
+
+app.delete('/api/client-equipment/:id', async (req: any, res: any) => {
+  await prisma.clientEquipment.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
 

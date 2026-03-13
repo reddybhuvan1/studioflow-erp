@@ -92,6 +92,15 @@ export interface ClientPayment {
   notes?: string;
 }
 
+export interface ClientEquipment {
+  id: string;
+  sessionId: string;
+  itemName: string;
+  receivedDate: string;
+  isReturned: boolean;
+  notes?: string;
+}
+
 export type ExpenseCategory = 'Rent' | 'Electricity' | 'WiFi' | 'Water' | 'Maintenance' | 'Equipment' | 'Other';
 export type EquipmentCategory = 'CAMERA' | 'LENS' | 'LIGHTING' | 'AUDIO' | 'ACCESSORY' | 'OTHER';
 export type EquipmentCondition = 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
@@ -140,6 +149,7 @@ export interface Session {
   isPaid: boolean;
   isDelivered: boolean;
   payments: ClientPayment[];
+  clientEquipment: ClientEquipment[];
 }
 
 export interface AppState {

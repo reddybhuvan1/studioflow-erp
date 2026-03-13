@@ -50,7 +50,8 @@ export function SessionCreation() {
             editingStatus: { photos: false, videos: false },
             isPaid: false,
             isDelivered: false,
-            payments: []
+            payments: [],
+            clientEquipment: []
         });
 
         setSuccess(true);

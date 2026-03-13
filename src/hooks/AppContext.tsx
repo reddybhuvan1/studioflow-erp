@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, ClientPayment, Expense, Equipment } from '../types';
+import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, ClientPayment, ClientEquipment, Expense, Equipment } from '../types';
 import { api } from '../api';
 
 interface AppContextType extends AppState {
@@ -15,6 +15,9 @@ interface AppContextType extends AppState {
     deleteSession: (id: string) => void;
     addClientPayment: (payment: ClientPayment) => void;
     deleteClientPayment: (id: string) => void;
+    addClientEquipment: (equipment: ClientEquipment) => void;
+    updateClientEquipment: (id: string, updates: Partial<ClientEquipment>) => void;
+    deleteClientEquipment: (id: string) => void;
     login: (email: string, password?: string) => boolean;
     logout: () => void;
     generateCredentials: (employeeId: string) => { email: string; password: string };
@@ -152,6 +155,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
             return s;
         }));
         api.delete(`/client-payments/${id}`).catch(console.error);
+    };
+
+    const addClientEquipment = (equipment: ClientEquipment) => {
+        setSessions(prev => prev.map(s => {
+            if (s.id === equipment.sessionId) {
+                return { ...s, clientEquipment: [...(s.clientEquipment || []), equipment] };
+            }
+            return s;
+        }));
+        api.post('/client-equipment', equipment).catch(console.error);
+    };
+
+    const updateClientEquipment = (id: string, updates: Partial<ClientEquipment>) => {
+        setSessions(prev => prev.map(s => {
+            if (s.clientEquipment && s.clientEquipment.some(e => e.id === id)) {
+                return {
+                    ...s,
+                    clientEquipment: s.clientEquipment.map(e => e.id === id ? { ...e, ...updates } : e)
+                };
+            }
+            return s;
+        }));
+        api.put(`/client-equipment/${id}`, updates).catch(console.error);
+    };
+
+    const deleteClientEquipment = (id: string) => {
+        setSessions(prev => prev.map(s => {
+            if (s.clientEquipment && s.clientEquipment.some(e => e.id === id)) {
+                return { ...s, clientEquipment: s.clientEquipment.filter(e => e.id !== id) };
+            }
+            return s;
+        }));
+        api.delete(`/client-equipment/${id}`).catch(console.error);
     };
 
     const login = (email: string, password?: string): boolean => {
@@ -299,6 +335,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             addClient, updateClient, deleteClient,
             addEmployee, updateEmployee, deleteEmployee,
             createSession, updateSession, deleteSession, addClientPayment, deleteClientPayment,
+            addClientEquipment, updateClientEquipment, deleteClientEquipment,
             login, logout, generateCredentials, resetCredentials,
             leads, addLead, updateLead, deleteLead,
             jobs, addJob, updateJob, deleteJob,
