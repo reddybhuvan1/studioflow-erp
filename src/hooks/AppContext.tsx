@@ -100,41 +100,83 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const addClient = (client: Client) => {
         setClients(prev => [...prev, client]);
-        api.post('/clients', client).catch(console.error);
+        api.post('/clients', client).catch(err => {
+            console.error("Failed to add client:", err);
+            setClients(prev => prev.filter(c => c.id !== client.id));
+            alert("Failed to save client. Please check your connection.");
+        });
     };
     const updateClient = (id: string, updates: Partial<Client>) => {
+        const original = clients.find(c => c.id === id);
         setClients(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
-        api.put(`/clients/${id}`, updates).catch(console.error);
+        api.put(`/clients/${id}`, updates).catch(err => {
+            console.error("Failed to update client:", err);
+            if (original) setClients(prev => prev.map(c => c.id === id ? original : c));
+            alert("Failed to update client.");
+        });
     };
     const deleteClient = (id: string) => {
+        const original = clients.find(c => c.id === id);
         setClients(prev => prev.filter(c => c.id !== id));
-        api.delete(`/clients/${id}`).catch(console.error);
+        api.delete(`/clients/${id}`).catch(err => {
+            console.error("Failed to delete client:", err);
+            if (original) setClients(prev => [...prev, original]);
+            alert("Failed to delete client.");
+        });
     };
 
     const addEmployee = (employee: Employee) => {
         setEmployees(prev => [...prev, employee]);
-        api.post('/employees', employee).catch(console.error);
+        api.post('/employees', employee).catch(err => {
+            console.error("Failed to add employee:", err);
+            setEmployees(prev => prev.filter(e => e.id !== employee.id));
+            alert("Failed to add employee.");
+        });
     };
     const updateEmployee = (id: string, updates: Partial<Employee>) => {
+        const original = employees.find(e => e.id === id);
         setEmployees(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
-        api.put(`/employees/${id}`, updates).catch(console.error);
+        api.put(`/employees/${id}`, updates).catch(err => {
+            console.error("Failed to update employee:", err);
+            if (original) setEmployees(prev => prev.map(e => e.id === id ? original : e));
+            alert("Failed to update employee.");
+        });
     };
     const deleteEmployee = (id: string) => {
+        const original = employees.find(e => e.id === id);
         setEmployees(prev => prev.filter(e => e.id !== id));
-        api.delete(`/employees/${id}`).catch(console.error);
+        api.delete(`/employees/${id}`).catch(err => {
+            console.error("Failed to delete employee:", err);
+            if (original) setEmployees(prev => [...prev, original]);
+            alert("Failed to delete employee.");
+        });
     };
 
     const createSession = (session: Session) => {
         setSessions(prev => [...prev, session]);
-        api.post('/sessions', session).catch(console.error);
+        api.post('/sessions', session).catch(err => {
+            console.error("Failed to create session:", err);
+            setSessions(prev => prev.filter(s => s.id !== session.id));
+            alert("Failed to create session.");
+        });
     };
     const updateSession = (id: string, updates: Partial<Session>) => {
+        const original = sessions.find(s => s.id === id);
         setSessions(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
-        api.put(`/sessions/${id}`, updates).catch(console.error);
+        api.put(`/sessions/${id}`, updates).catch(err => {
+            console.error("Failed to update session:", err);
+            if (original) setSessions(prev => prev.map(s => s.id === id ? original : s));
+            alert("Failed to update session.");
+        });
     };
     const deleteSession = (id: string) => {
+        const original = sessions.find(s => s.id === id);
         setSessions(prev => prev.filter(s => s.id !== id));
-        api.delete(`/sessions/${id}`).catch(console.error);
+        api.delete(`/sessions/${id}`).catch(err => {
+            console.error("Failed to delete session:", err);
+            if (original) setSessions(prev => [...prev, original]);
+            alert("Failed to delete session.");
+        });
     };
 
     const addClientPayment = (payment: ClientPayment) => {
@@ -257,54 +299,110 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const addLead = (lead: Lead) => {
         setLeads(prev => [...prev, lead]);
-        api.post('/leads', lead).catch(console.error);
+        api.post('/leads', lead).catch(err => {
+            console.error("Failed to add lead:", err);
+            setLeads(prev => prev.filter(l => l.id !== lead.id));
+            alert("Failed to add lead.");
+        });
     };
     const updateLead = (id: string, updates: Partial<Lead>) => {
+        const original = leads.find(l => l.id === id);
         setLeads(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
-        api.put(`/leads/${id}`, updates).catch(console.error);
+        api.put(`/leads/${id}`, updates).catch(err => {
+            console.error("Failed to update lead:", err);
+            if (original) setLeads(prev => prev.map(l => l.id === id ? original : l));
+            alert("Failed to update lead.");
+        });
     };
     const deleteLead = (id: string) => {
+        const original = leads.find(l => l.id === id);
         setLeads(prev => prev.filter(l => l.id !== id));
-        api.delete(`/leads/${id}`).catch(console.error);
+        api.delete(`/leads/${id}`).catch(err => {
+            console.error("Failed to delete lead:", err);
+            if (original) setLeads(prev => [...prev, original]);
+            alert("Failed to delete lead.");
+        });
     };
 
     const addJob = (job: Job) => {
         setJobs(prev => [...prev, job]);
-        api.post('/jobs', job).catch(console.error);
+        api.post('/jobs', job).catch(err => {
+            console.error("Failed to add job:", err);
+            setJobs(prev => prev.filter(j => j.id !== job.id));
+            alert("Failed to add job.");
+        });
     };
     const updateJob = (id: string, updates: Partial<Job>) => {
+        const original = jobs.find(j => j.id === id);
         setJobs(prev => prev.map(j => j.id === id ? { ...j, ...updates } : j));
-        api.put(`/jobs/${id}`, updates).catch(console.error);
+        api.put(`/jobs/${id}`, updates).catch(err => {
+            console.error("Failed to update job:", err);
+            if (original) setJobs(prev => prev.map(j => j.id === id ? original : j));
+            alert("Failed to update job.");
+        });
     };
     const deleteJob = (id: string) => {
+        const original = jobs.find(j => j.id === id);
         setJobs(prev => prev.filter(j => j.id !== id));
-        api.delete(`/jobs/${id}`).catch(console.error);
+        api.delete(`/jobs/${id}`).catch(err => {
+            console.error("Failed to delete job:", err);
+            if (original) setJobs(prev => [...prev, original]);
+            alert("Failed to delete job.");
+        });
     };
 
     const addFreelancer = (freelancer: Freelancer) => {
         setFreelancers(prev => [...prev, freelancer]);
-        api.post('/freelancers', freelancer).catch(console.error);
+        api.post('/freelancers', freelancer).catch(err => {
+            console.error("Failed to add freelancer:", err);
+            setFreelancers(prev => prev.filter(f => f.id !== freelancer.id));
+            alert("Failed to add freelancer.");
+        });
     };
     const updateFreelancer = (id: string, updates: Partial<Freelancer>) => {
+        const original = freelancers.find(f => f.id === id);
         setFreelancers(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
-        api.put(`/freelancers/${id}`, updates).catch(console.error);
+        api.put(`/freelancers/${id}`, updates).catch(err => {
+            console.error("Failed to update freelancer:", err);
+            if (original) setFreelancers(prev => prev.map(f => f.id === id ? original : f));
+            alert("Failed to update freelancer.");
+        });
     };
     const deleteFreelancer = (id: string) => {
+        const original = freelancers.find(f => f.id === id);
         setFreelancers(prev => prev.filter(f => f.id !== id));
-        api.delete(`/freelancers/${id}`).catch(console.error);
+        api.delete(`/freelancers/${id}`).catch(err => {
+            console.error("Failed to delete freelancer:", err);
+            if (original) setFreelancers(prev => [...prev, original]);
+            alert("Failed to delete freelancer.");
+        });
     };
 
     const addFreelancerPayment = (payment: FreelancerPayment) => {
         setFreelancerPayments(prev => [...prev, payment]);
-        api.post('/freelancer-payments', payment).catch(console.error);
+        api.post('/freelancer-payments', payment).catch(err => {
+            console.error("Failed to add freelancer payment:", err);
+            setFreelancerPayments(prev => prev.filter(p => p.id !== payment.id));
+            alert("Failed to add freelancer payment.");
+        });
     };
     const updateFreelancerPayment = (id: string, updates: Partial<FreelancerPayment>) => {
+        const original = freelancerPayments.find(p => p.id === id);
         setFreelancerPayments(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
-        api.put(`/freelancer-payments/${id}`, updates).catch(console.error);
+        api.put(`/freelancer-payments/${id}`, updates).catch(err => {
+            console.error("Failed to update freelancer payment:", err);
+            if (original) setFreelancerPayments(prev => prev.map(p => p.id === id ? original : p));
+            alert("Failed to update freelancer payment.");
+        });
     };
     const deleteFreelancerPayment = (id: string) => {
+        const original = freelancerPayments.find(p => p.id === id);
         setFreelancerPayments(prev => prev.filter(p => p.id !== id));
-        api.delete(`/freelancer-payments/${id}`).catch(console.error);
+        api.delete(`/freelancer-payments/${id}`).catch(err => {
+            console.error("Failed to delete freelancer payment:", err);
+            if (original) setFreelancerPayments(prev => [...prev, original]);
+            alert("Failed to delete freelancer payment.");
+        });
     };
 
     const addExpense = (expense: Expense) => {
