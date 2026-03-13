@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useApp } from '../../hooks/AppContext';
 import { X, CreditCard, Calendar, Trash2 } from 'lucide-react';
-import type { Session, ClientPayment } from '../../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import type { Session } from '../../types';
+import { motion } from 'framer-motion';
 
 export function PaymentModal({ session, onClose }: { session: Session, onClose: () => void }) {
     const { addClientPayment, deleteClientPayment } = useApp();

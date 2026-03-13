@@ -49,7 +49,8 @@ export function SessionCreation() {
             stage: 'Intake',
             editingStatus: { photos: false, videos: false },
             isPaid: false,
-            isDelivered: false
+            isDelivered: false,
+            payments: []
         });
 
         setSuccess(true);
