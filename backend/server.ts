@@ -33,17 +33,19 @@ app.get('/api/clients', async (req, res) => {
   res.json(clients);
 });
 
-app.post('/api/clients', async (req, res) => {
-  const client = await prisma.client.create({ data: req.body });
+app.post('/api/clients', async (req: any, res: any) => {
+  const { sessions, ...data } = req.body;
+  const client = await prisma.client.create({ data });
   res.json(client);
 });
 
-app.put('/api/clients/:id', async (req, res) => {
-  const client = await prisma.client.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/clients/:id', async (req: any, res: any) => {
+  const { sessions, ...data } = req.body;
+  const client = await prisma.client.update({ where: { id: req.params.id }, data });
   res.json(client);
 });
 
-app.delete('/api/clients/:id', async (req, res) => {
+app.delete('/api/clients/:id', async (req: any, res: any) => {
   await prisma.client.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
@@ -54,17 +56,19 @@ app.get('/api/leads', async (req, res) => {
   res.json(leads);
 });
 
-app.post('/api/leads', async (req, res) => {
-  const lead = await prisma.lead.create({ data: req.body });
+app.post('/api/leads', async (req: any, res: any) => {
+  const { jobs, ...data } = req.body;
+  const lead = await prisma.lead.create({ data });
   res.json(lead);
 });
 
-app.put('/api/leads/:id', async (req, res) => {
-  const lead = await prisma.lead.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/leads/:id', async (req: any, res: any) => {
+  const { jobs, ...data } = req.body;
+  const lead = await prisma.lead.update({ where: { id: req.params.id }, data });
   res.json(lead);
 });
 
-app.delete('/api/leads/:id', async (req, res) => {
+app.delete('/api/leads/:id', async (req: any, res: any) => {
   await prisma.lead.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
@@ -75,17 +79,19 @@ app.get('/api/jobs', async (req, res) => {
   res.json(jobs);
 });
 
-app.post('/api/jobs', async (req, res) => {
-  const job = await prisma.job.create({ data: req.body });
+app.post('/api/jobs', async (req: any, res: any) => {
+  const { lead, ...data } = req.body;
+  const job = await prisma.job.create({ data });
   res.json(job);
 });
 
-app.put('/api/jobs/:id', async (req, res) => {
-  const job = await prisma.job.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/jobs/:id', async (req: any, res: any) => {
+  const { lead, ...data } = req.body;
+  const job = await prisma.job.update({ where: { id: req.params.id }, data });
   res.json(job);
 });
 
-app.delete('/api/jobs/:id', async (req, res) => {
+app.delete('/api/jobs/:id', async (req: any, res: any) => {
   await prisma.job.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
@@ -96,17 +102,19 @@ app.get('/api/sessions', async (req, res) => {
   res.json(sessions);
 });
 
-app.post('/api/sessions', async (req, res) => {
-  const session = await prisma.session.create({ data: req.body });
+app.post('/api/sessions', async (req: any, res: any) => {
+  const { client, ...data } = req.body;
+  const session = await prisma.session.create({ data });
   res.json(session);
 });
 
-app.put('/api/sessions/:id', async (req, res) => {
-  const session = await prisma.session.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/sessions/:id', async (req: any, res: any) => {
+  const { client, ...data } = req.body;
+  const session = await prisma.session.update({ where: { id: req.params.id }, data });
   res.json(session);
 });
 
-app.delete('/api/sessions/:id', async (req, res) => {
+app.delete('/api/sessions/:id', async (req: any, res: any) => {
   await prisma.session.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
@@ -117,17 +125,19 @@ app.get('/api/freelancers', async (req, res) => {
   res.json(freelancers);
 });
 
-app.post('/api/freelancers', async (req, res) => {
-  const f = await prisma.freelancer.create({ data: req.body });
+app.post('/api/freelancers', async (req: any, res: any) => {
+  const { payments, ...data } = req.body;
+  const f = await prisma.freelancer.create({ data });
   res.json(f);
 });
 
-app.put('/api/freelancers/:id', async (req, res) => {
-  const f = await prisma.freelancer.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/freelancers/:id', async (req: any, res: any) => {
+  const { payments, ...data } = req.body;
+  const f = await prisma.freelancer.update({ where: { id: req.params.id }, data });
   res.json(f);
 });
 
-app.delete('/api/freelancers/:id', async (req, res) => {
+app.delete('/api/freelancers/:id', async (req: any, res: any) => {
   await prisma.freelancer.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
@@ -170,17 +180,24 @@ app.delete('/api/employees/:id', async (req, res) => {
 });
 
 // Freelancer Payments
-app.post('/api/freelancer-payments', async (req, res) => {
-  const payment = await prisma.freelancerPayment.create({ data: req.body });
+app.get('/api/freelancer-payments', async (req: any, res: any) => {
+  const payments = await prisma.freelancerPayment.findMany();
+  res.json(payments);
+});
+
+app.post('/api/freelancer-payments', async (req: any, res: any) => {
+  const { freelancer, ...data } = req.body;
+  const payment = await prisma.freelancerPayment.create({ data });
   res.json(payment);
 });
 
-app.put('/api/freelancer-payments/:id', async (req, res) => {
-  const payment = await prisma.freelancerPayment.update({ where: { id: req.params.id }, data: req.body });
+app.put('/api/freelancer-payments/:id', async (req: any, res: any) => {
+  const { freelancer, ...data } = req.body;
+  const payment = await prisma.freelancerPayment.update({ where: { id: req.params.id }, data });
   res.json(payment);
 });
 
-app.delete('/api/freelancer-payments/:id', async (req, res) => {
+app.delete('/api/freelancer-payments/:id', async (req: any, res: any) => {
   await prisma.freelancerPayment.delete({ where: { id: req.params.id } });
   res.json({ success: true });
 });
