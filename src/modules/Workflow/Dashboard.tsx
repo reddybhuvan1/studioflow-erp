@@ -150,6 +150,14 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                     </div>
 
                                     <div className="flex items-center gap-4 shrink-0">
+                                        <button
+                                            onClick={() => setActivePaymentSession(session)}
+                                            className="p-3 text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
+                                            title="View Payment Ledger"
+                                        >
+                                            <CreditCard size={20} />
+                                        </button>
+
                                         {isAdmin && (
                                             <button
                                                 onClick={() => handleDelete(session.id)}

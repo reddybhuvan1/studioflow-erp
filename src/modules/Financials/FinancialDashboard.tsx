@@ -4,8 +4,8 @@ import { IndianRupee, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Ac
 export function FinancialDashboard() {
     const { sessions, freelancerPayments, expenses } = useApp();
 
-    // 1. Calculate Gross Revenue (Only Paid projects)
-    const grossRevenue = sessions.filter(s => s.isPaid).reduce((sum, s) => sum + s.grandTotal, 0);
+    // 1. Calculate Gross Revenue (Actual cash received)
+    const grossRevenue = sessions.reduce((sum, s) => sum + (s.payments || []).reduce((pSum, p) => pSum + p.amount, 0), 0);
 
     // 2. Calculate Freelancer Payouts
     const totalPayouts = freelancerPayments.reduce((sum, p) => sum + p.amount, 0);
