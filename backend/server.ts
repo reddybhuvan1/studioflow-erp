@@ -103,13 +103,13 @@ app.get('/api/sessions', async (req: any, res: any) => {
 });
 
 app.post('/api/sessions', async (req: any, res: any) => {
-  const { client, ...data } = req.body;
+  const { client, payments, clientEquipment, ...data } = req.body;
   const session = await prisma.session.create({ data });
   res.json(session);
 });
 
 app.put('/api/sessions/:id', async (req: any, res: any) => {
-  const { client, ...data } = req.body;
+  const { client, payments, clientEquipment, ...data } = req.body;
   const session = await prisma.session.update({ where: { id: req.params.id }, data });
   res.json(session);
 });
