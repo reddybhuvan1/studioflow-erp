@@ -1,5 +1,5 @@
-// Use the environment variable if provided (for Vercel), otherwise fallback to the Vite proxy
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+// Hardcoded for production to guarantee connection since Render and Vercel are struggling with proxy rewrites
+const API_URL = 'https://studioflow-api.onrender.com/api';
 
 export const api = {
     get: async <T>(endpoint: string): Promise<T> => {
