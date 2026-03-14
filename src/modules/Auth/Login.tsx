@@ -10,19 +10,21 @@ export function Login() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
-        // Authentication attempt
-        setTimeout(() => {
-            const success = login(email, password);
+        try {
+            const success = await login(email, password);
             if (!success) {
                 setError('Electronic credentials rejected. Direct identity confirmation required.');
                 setIsLoading(false);
             }
-        }, 1000);
+        } catch (error) {
+            setError('Electronic credentials rejected. Direct identity confirmation required.');
+            setIsLoading(false);
+        }
     };
 
     return (

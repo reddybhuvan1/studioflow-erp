@@ -18,7 +18,7 @@ interface AppContextType extends AppState {
     addClientEquipment: (equipment: ClientEquipment) => void;
     updateClientEquipment: (id: string, updates: Partial<ClientEquipment>) => void;
     deleteClientEquipment: (id: string) => void;
-    login: (email: string, password?: string) => boolean;
+    login: (email: string, password?: string) => Promise<boolean>;
     logout: () => void;
     generateCredentials: (employeeId: string) => { email: string; password: string };
     resetCredentials: (employeeId: string) => string;
@@ -239,36 +239,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
         api.delete(`/client-equipment/${id}`).catch(console.error);
     };
 
-    const login = (email: string, password?: string): boolean => {
+    const login = async (email: string, password?: string): Promise<boolean> => {
         const cleanEmail = (email || '').trim().toLowerCase();
         const cleanPassword = (password || '').trim();
 
-        // Admin hardcoded logic
-        if (cleanEmail === 'admin@kranthi.com' && cleanPassword === 'admin123') {
-            setUser({
-                id: 'admin-001',
-                name: 'Admin User',
-                email: cleanEmail,
-                role: 'admin'
+        try {
+            const data = await api.post<any>('/auth/login', { 
+                email: cleanEmail, 
+                password: cleanPassword 
             });
-            return true;
-        }
-
-        // Search in employees
-        const employee = employees.find(e => {
-            if (!e.email || !e.password) return false;
-            return e.email.trim().toLowerCase() === cleanEmail && 
-                   e.password.trim().toLowerCase() === cleanPassword.toLowerCase();
-        });
-        
-        if (employee) {
-            setUser({
-                id: employee.id,
-                name: employee.name,
-                email: employee.email!,
-                role: 'employee'
-            });
-            return true;
+            
+            if (data && data.id) {
+                setUser({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email || cleanEmail,
+                    role: data.role || 'employee'
+                });
+                return true;
+            }
+        } catch (err) {
+            console.error("Login failed:", err);
         }
 
         return false;
