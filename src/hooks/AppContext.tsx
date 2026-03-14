@@ -68,7 +68,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         // Fetch all data from backend on mount
         const loadState = async () => {
             try {
-                const [clientsData, employeesData, sessionsData, leadsData, jobsData, freelancersData, paymentsData, expensesData, eqData] = await Promise.all([
+                const results = await Promise.allSettled([
                     api.get<Client[]>('/clients'),
                     api.get<Employee[]>('/employees'),
                     api.get<Session[]>('/sessions'),
@@ -79,18 +79,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     api.get<Expense[]>('/expenses'),
                     api.get<Equipment[]>('/equipment')
                 ]);
-                
-                setClients(clientsData);
-                setEmployees(employeesData);
-                setSessions(sessionsData);
-                setLeads(leadsData);
-                setJobs(jobsData);
-                setFreelancers(freelancersData);
-                setFreelancerPayments(paymentsData);
-                setExpenses(expensesData);
-                setEquipment(eqData);
+
+                if (results[0].status === 'fulfilled') setClients(results[0].value);
+                if (results[1].status === 'fulfilled') setEmployees(results[1].value);
+                if (results[2].status === 'fulfilled') setSessions(results[2].value);
+                if (results[3].status === 'fulfilled') setLeads(results[3].value);
+                if (results[4].status === 'fulfilled') setJobs(results[4].value);
+                if (results[5].status === 'fulfilled') setFreelancers(results[5].value);
+                if (results[6].status === 'fulfilled') setFreelancerPayments(results[6].value);
+                if (results[7].status === 'fulfilled') setExpenses(results[7].value);
+                if (results[8].status === 'fulfilled') setEquipment(results[8].value);
+
+                // Log any rejections for debugging
+                results.forEach((res, index) => {
+                    if (res.status === 'rejected') {
+                        console.error(`API endpoint at index ${index} failed:`, res.reason);
+                    }
+                });
             } catch (err) {
-                console.error("Failed to load initial state from API:", err);
+                console.error("Critical failure during initial state load:", err);
             }
         };
         loadState();
