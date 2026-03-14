@@ -295,12 +295,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
             return prev.map(e => e.id === employeeId ? { ...e, email, password } : e);
         });
 
+        // Persist credentials to the backend so they are available upon login
+        api.put(`/employees/${employeeId}`, { email, password }).catch(err => {
+            console.error("Failed to persist new credentials to server:", err);
+            alert("Failed to save generated credentials to server.");
+        });
+
         return { email, password };
     };
 
     const resetCredentials = (employeeId: string) => {
         const password = Math.random().toString(36).substr(2, 8).toUpperCase();
         setEmployees(prev => prev.map(e => e.id === employeeId ? { ...e, password } : e));
+        
+        // Persist credentials to the backend so they are available upon login
+        api.put(`/employees/${employeeId}`, { password }).catch(err => {
+            console.error("Failed to persist reset credentials to server:", err);
+            alert("Failed to save reset credentials to server.");
+        });
+
         return password;
     };
 
