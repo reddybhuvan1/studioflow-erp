@@ -1,4 +1,4 @@
-export type WorkflowStage = 'Intake' | 'Photography' | 'Editing' | 'Payment' | 'Delivery' | 'Closed';
+export type WorkflowStage = 'INTAKE' | 'PHOTOGRAPHY' | 'EDITING' | 'PAYMENT' | 'DELIVERY' | 'CLOSED';
 export type UserRole = 'admin' | 'employee';
 export type LeadStatus = 'New Lead' | 'Contacted' | 'Quoted' | 'Followed Up' | 'Lost';
 export type JobType = 'Wedding' | 'Portrait' | 'Corporate' | 'Family' | 'Event' | 'Other';

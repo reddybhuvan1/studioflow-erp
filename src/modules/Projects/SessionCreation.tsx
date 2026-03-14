@@ -46,7 +46,7 @@ export function SessionCreation() {
             events: events,
             quotation: formData.quotation,
             grandTotal: formData.grandTotal,
-            stage: 'Intake',
+            stage: 'INTAKE',
             editingStatus: { photos: false, videos: false },
             isPaid: false,
             isDelivered: false,
@@ -67,13 +67,13 @@ export function SessionCreation() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-12 pb-24">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 pb-16 md:pb-24">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">PROJECT</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">INTAKE</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">PROJECT</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">INTAKE</h2>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 border border-black/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                <div className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 border border-black/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground w-max">
                     <Sparkles size={14} className="text-black" /> MULTI-PHASE
                 </div>
             </header>
@@ -81,7 +81,7 @@ export function SessionCreation() {
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-12 border border-black/5 bg-white relative overflow-hidden"
+                className="p-6 md:p-12 border border-black/5 bg-white relative overflow-hidden"
             >
                 <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -153,7 +153,7 @@ export function SessionCreation() {
                                                 required
                                             />
                                         </div>
-                                        <div className="flex gap-3">
+                                        <div className="flex flex-col sm:flex-row gap-3">
                                             <div className="relative flex-1">
                                                 <Calendar className="absolute left-0 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                                                 <input
@@ -164,7 +164,7 @@ export function SessionCreation() {
                                                     required
                                                 />
                                             </div>
-                                            <div className="relative w-28 shrink-0">
+                                            <div className="relative w-full sm:w-28 shrink-0 flex items-center gap-2 sm:block">
                                                 <input
                                                     type="number"
                                                     min="0"
@@ -248,7 +248,7 @@ export function SessionCreation() {
                             type="submit"
                             disabled={success}
                             className={`
-                                relative min-w-[280px] h-16 bg-black text-white font-black text-[10px] tracking-[0.4em] uppercase transition-all duration-500 overflow-hidden
+                                relative w-full md:min-w-[280px] md:w-auto h-14 md:h-16 bg-black text-white font-black text-[9px] md:text-[10px] tracking-[0.4em] uppercase transition-all duration-500 overflow-hidden
                                 ${success ? 'bg-zinc-800' : 'hover:bg-zinc-900'}
                             `}
                         >

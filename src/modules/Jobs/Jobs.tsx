@@ -58,7 +58,7 @@ export function Jobs() {
         : 0;
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             {/* Stats Dashboard */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="card-premium p-6 bg-black text-white">
@@ -96,14 +96,14 @@ export function Jobs() {
             </div>
 
             {/* Header */}
-            <header className="flex items-center justify-between">
+            <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-4xl font-black tracking-tighter text-foreground">JOBS</h1>
                     <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground mt-1">Active Productions</p>
                 </div>
                 <button
                     onClick={() => { setFormData(EMPTY_FORM); setEditingId(null); setShowForm(!showForm); }}
-                    className="h-14 px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4"
+                    className="w-full sm:w-auto h-12 md:h-14 px-6 md:px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] flex items-center justify-center sm:justify-start gap-3 md:gap-4 shrink-0"
                 >
                     <Briefcase size={18} />
                     <span>Create New Job</span>
@@ -119,8 +119,8 @@ export function Jobs() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                     >
-                        <div className="card-premium p-8">
-                            <div className="flex items-center gap-3 mb-8">
+                        <div className="card-premium p-4 md:p-8">
+                            <div className="flex items-center gap-3 mb-6 md:mb-8">
                                 <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center"><Briefcase size={18} /></div>
                                 <h3 className="text-lg font-black uppercase tracking-wider">{editingId ? 'Edit Job' : 'New Job'}</h3>
                             </div>
@@ -154,9 +154,9 @@ export function Jobs() {
                                     <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Internal Notes</label>
                                     <textarea className="input-field resize-none" rows={2} placeholder="Any specific requirements for this job..." value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
                                 </div>
-                                <div className="md:col-span-2 flex justify-end gap-4 mt-2">
-                                    <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors">Cancel</button>
-                                    <button type="submit" className="btn-primary px-12">{editingId ? 'Update Job' : 'Create Job'}</button>
+                                <div className="md:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 mt-2">
+                                    <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors">Cancel</button>
+                                    <button type="submit" className="w-full sm:w-auto btn-primary sm:px-12">{editingId ? 'Update Job' : 'Create Job'}</button>
                                 </div>
                             </form>
                         </div>

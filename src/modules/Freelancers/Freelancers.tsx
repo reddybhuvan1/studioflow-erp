@@ -20,7 +20,7 @@ export function Freelancers() {
         freelancerId: '', sessionId: '', eventName: '', eventDate: '', amount: 0, status: 'Pending'
     });
 
-    const activeSessions = sessions.filter(s => s.stage !== 'Closed');
+    const activeSessions = sessions.filter(s => s.stage !== 'CLOSED');
     const selectedSession = activeSessions.find(s => s.id === paymentData.sessionId);
 
     const handleAddFreelancer = (e: React.FormEvent) => {
@@ -52,22 +52,22 @@ export function Freelancers() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-24">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-16 md:pb-24">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">FREELANCERS</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">NETWORK & PAYMENTS</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">FREELANCERS</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">NETWORK & PAYMENTS</h2>
                 </div>
-                <div className="flex bg-secondary/30 p-1 rounded-lg">
+                <div className="flex bg-secondary/30 p-1 rounded-lg self-start sm:self-auto w-full sm:w-auto">
                     <button 
                         onClick={() => setView('Directory')}
-                        className={`px-6 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${view === 'Directory' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-muted-foreground hover:bg-black/5'}`}
+                        className={`flex-1 sm:flex-none px-4 md:px-6 py-2 rounded-md text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${view === 'Directory' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-muted-foreground hover:bg-black/5'}`}
                     >
                         Directory
                     </button>
                     <button 
                         onClick={() => setView('Payments')}
-                        className={`px-6 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${view === 'Payments' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-muted-foreground hover:bg-black/5'}`}
+                        className={`flex-1 sm:flex-none px-4 md:px-6 py-2 rounded-md text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${view === 'Payments' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-muted-foreground hover:bg-black/5'}`}
                     >
                         Event Payments
                     </button>
@@ -76,8 +76,8 @@ export function Freelancers() {
 
             {view === 'Directory' && (
                 <div className="space-y-6">
-                    <div className="flex justify-end">
-                        <button onClick={() => setShowFreelancerForm(true)} className="flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-black/80 font-bold uppercase tracking-widest text-[10px] transition-all">
+                    <div className="flex justify-start sm:justify-end">
+                        <button onClick={() => setShowFreelancerForm(true)} className="w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 px-6 py-3 bg-black text-white hover:bg-black/80 font-bold uppercase tracking-widest text-[10px] transition-all">
                             <UserPlus size={16} /> Add Freelancer
                         </button>
                     </div>
@@ -120,28 +120,28 @@ export function Freelancers() {
 
             {view === 'Payments' && (
                 <div className="space-y-6">
-                    <div className="flex justify-between items-center bg-secondary/10 p-6 border border-border/50">
-                        <div className="flex gap-12">
+                    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 bg-secondary/10 p-4 md:p-6 border border-border/50">
+                        <div className="flex gap-6 md:gap-12 w-full sm:w-auto justify-between sm:justify-start">
                             <div>
                                 <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total Outstanding</div>
-                                <div className="text-3xl font-black text-destructive">
+                                <div className="text-2xl md:text-3xl font-black text-destructive">
                                     ₹{freelancerPayments.filter(p => p.status === 'Pending').reduce((a,c) => a+c.amount, 0).toLocaleString('en-IN')}
                                 </div>
                             </div>
                             <div>
                                 <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total Paid out</div>
-                                <div className="text-3xl font-black text-emerald-600">
+                                <div className="text-2xl md:text-3xl font-black text-emerald-600">
                                     ₹{freelancerPayments.filter(p => p.status === 'Paid').reduce((a,c) => a+c.amount, 0).toLocaleString('en-IN')}
                                 </div>
                             </div>
                         </div>
-                        <button onClick={() => setShowPaymentForm(true)} className="flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-black/80 font-bold uppercase tracking-widest text-[10px] transition-all">
+                        <button onClick={() => setShowPaymentForm(true)} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-black text-white hover:bg-black/80 font-bold uppercase tracking-widest text-[10px] transition-all shrink-0">
                             <Plus size={16} /> Assign Payment
                         </button>
                     </div>
 
-                    <div className="card-premium overflow-hidden !p-0">
-                        <table className="w-full text-left">
+                    <div className="card-premium overflow-x-auto !p-0">
+                        <table className="w-full text-left min-w-[700px]">
                             <thead className="bg-secondary/30">
                                 <tr className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                                     <th className="px-6 py-4">Freelancer</th>

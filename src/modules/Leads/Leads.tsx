@@ -73,7 +73,7 @@ export function Leads() {
     });
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             {/* Welcome Banner */}
             <AnimatePresence>
                 {showWelcome && (
@@ -120,14 +120,14 @@ export function Leads() {
             </AnimatePresence>
 
             {/* Header */}
-            <header className="flex items-center justify-between">
+            <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-black tracking-tighter text-foreground">LEADS</h1>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground mt-1">Prospect Pipeline</p>
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-foreground">LEADS</h1>
+                    <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground mt-1">Prospect Pipeline</p>
                 </div>
                 <button
                     onClick={() => { setFormData(EMPTY_FORM); setEditingId(null); setShowForm(!showForm); }}
-                    className="h-14 px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4"
+                    className="w-full sm:w-auto h-12 md:h-14 px-6 md:px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] flex items-center justify-center sm:justify-start gap-3 md:gap-4 shrink-0"
                 >
                     <UserPlus size={18} />
                     <span>Add New Lead</span>
@@ -143,8 +143,8 @@ export function Leads() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                     >
-                        <div className="card-premium p-8">
-                            <div className="flex items-center gap-3 mb-8">
+                        <div className="card-premium p-4 md:p-8">
+                            <div className="flex items-center gap-3 mb-6 md:mb-8">
                                 <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center"><Target size={18} /></div>
                                 <h3 className="text-lg font-black uppercase tracking-wider">{editingId ? 'Edit Lead' : 'New Lead'}</h3>
                             </div>
@@ -263,9 +263,9 @@ export function Leads() {
                                     <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Notes</label>
                                     <textarea className="input-field resize-none" rows={2} placeholder="Any additional notes..." value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
                                 </div>
-                                <div className="md:col-span-2 flex justify-end gap-4 mt-2">
-                                    <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors">Cancel</button>
-                                    <button type="submit" className="btn-primary px-12">{editingId ? 'Save Changes' : 'Add Lead'}</button>
+                                <div className="md:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 mt-2">
+                                    <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors">Cancel</button>
+                                    <button type="submit" className="w-full sm:w-auto btn-primary sm:px-12">{editingId ? 'Save Changes' : 'Add Lead'}</button>
                                 </div>
                             </form>
                         </div>
@@ -291,8 +291,8 @@ export function Leads() {
             </div>
 
             {/* Table */}
-            <div className="card-premium !p-0 overflow-hidden shadow-2xl">
-                <table className="w-full text-left border-collapse">
+            <div className="card-premium !p-0 overflow-x-auto shadow-2xl">
+                <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
                         <tr className="bg-secondary/50 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]">
                             <th className="px-8 py-6">Lead Created</th>

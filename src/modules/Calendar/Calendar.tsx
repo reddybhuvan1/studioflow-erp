@@ -33,7 +33,7 @@ export function CalendarModule() {
 
     // Map session events
     const sessionEventsByDay = sessions.reduce((acc, session) => {
-        if (session.stage === 'Closed') return acc; // Skip closed projects
+        if (session.stage === 'CLOSED') return acc; // Skip closed projects
         
         const clientName = getClientName(session.clientId);
         

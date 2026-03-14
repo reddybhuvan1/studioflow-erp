@@ -76,8 +76,8 @@ export function InventoryVault() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
-      <div className="flex justify-between items-center">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <Package className="w-8 h-8 text-indigo-400" />
@@ -87,7 +87,7 @@ export function InventoryVault() {
         </div>
         <button
           onClick={() => setIsAddingEq(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors"
+          className="w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors shrink-0"
         >
           <Plus className="w-5 h-5" />
           Add Asset
@@ -121,8 +121,8 @@ export function InventoryVault() {
 
       {/* Filters & Ledger */}
       <div className="bg-[#1A1A24] border border-gray-800 rounded-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-800 flex flex-wrap gap-4 items-center justify-between">
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="p-4 md:p-6 border-b border-gray-800 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="relative w-full sm:flex-1 sm:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
@@ -135,7 +135,7 @@ export function InventoryVault() {
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value as any)}
-            className="px-4 py-2 bg-[#0F0F16] border border-gray-800 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+            className="w-full sm:w-auto px-4 py-2 bg-[#0F0F16] border border-gray-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 shrink-0"
           >
             <option value="ALL">All Categories</option>
             <option value="CAMERA">Cameras</option>
@@ -148,7 +148,7 @@ export function InventoryVault() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-left min-w-[800px]">
             <thead className="bg-[#13131A] text-gray-400 text-sm">
               <tr>
                 <th className="px-6 py-4 font-medium">Asset Details</th>
@@ -218,7 +218,7 @@ export function InventoryVault() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1A1A24] border border-gray-800 rounded-xl p-6 w-full max-w-2xl shadow-2xl overflow-y-auto max-h-[90vh]"
+              className="bg-[#1A1A24] border border-gray-800 rounded-xl p-4 md:p-6 w-full max-w-2xl shadow-2xl overflow-y-auto max-h-[90vh]"
             >
               <h2 className="text-2xl font-bold text-white mb-6">Log New Asset</h2>
               

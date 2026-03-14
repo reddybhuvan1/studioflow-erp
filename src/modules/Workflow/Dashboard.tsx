@@ -6,15 +6,15 @@ import { PaymentModal } from './PaymentModal';
 import { EquipmentLedgerModal } from './EquipmentLedgerModal';
 import { useState } from 'react';
 
-const STAGES: WorkflowStage[] = ['Intake', 'Photography', 'Editing', 'Payment', 'Delivery'];
+const STAGES: WorkflowStage[] = ['INTAKE', 'PHOTOGRAPHY', 'EDITING', 'PAYMENT', 'DELIVERY', 'CLOSED'];
 
 const STAGE_ICONS: Record<string, any> = {
-    'Intake': <Plus size={20} />,
-    'Photography': <Camera size={20} />,
-    'Editing': <Edit3 size={20} />,
-    'Payment': <CreditCard size={20} />,
-    'Delivery': <Send size={20} />,
-    'Closed': <Archive size={20} />
+    'INTAKE': <Plus size={20} />,
+    'PHOTOGRAPHY': <Camera size={20} />,
+    'EDITING': <Edit3 size={20} />,
+    'PAYMENT': <CreditCard size={20} />,
+    'DELIVERY': <Send size={20} />,
+    'CLOSED': <Archive size={20} />
 };
 
 export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
@@ -39,13 +39,13 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
     const moveNext = (session: Session) => {
         const currentIndex = STAGES.indexOf(session.stage);
         if (currentIndex < STAGES.length - 1) {
-            if (session.stage === 'Editing') {
+            if (session.stage === 'EDITING') {
                 if (!session.editingStatus.photos || !session.editingStatus.videos) {
                     return alert('Both Photos and Videos must be complete to proceed.');
                 }
             }
 
-            if (session.stage === 'Payment') {
+            if (session.stage === 'PAYMENT') {
                 const totalPaid = (session.payments || []).reduce((sum, p) => sum + p.amount, 0);
                 if (totalPaid < session.grandTotal) {
                     return alert('Full payment must be logged to proceed to Delivery.');
@@ -53,19 +53,19 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
             }
 
             updateSession(session.id, { stage: STAGES[currentIndex + 1] });
-        } else if (session.stage === 'Delivery') {
-            updateSession(session.id, { stage: 'Closed', isDelivered: true });
+        } else if (session.stage === 'DELIVERY') {
+            updateSession(session.id, { stage: 'CLOSED', isDelivered: true });
         }
     };
 
     return (
-        <div className="space-y-12 max-w-7xl mx-auto">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="space-y-8 md:space-y-12 max-w-7xl mx-auto">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">ACTIVE</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">WORKFLOW</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">ACTIVE</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">WORKFLOW</h2>
                 </div>
-                <button onClick={onNewProject} className="h-14 px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4">
+                <button onClick={onNewProject} className="w-full sm:w-auto h-12 md:h-14 px-6 md:px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] flex items-center justify-center sm:justify-start gap-3 md:gap-4 shrink-0">
                     <Plus size={18} />
                     <span>Initiate Intake</span>
                 </button>
@@ -77,7 +77,7 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="card-premium p-24 text-center border-dashed border-2 flex flex-col items-center justify-center bg-secondary/20"
+                            className="card-premium p-8 md:p-24 text-center border-dashed border-2 flex flex-col items-center justify-center bg-secondary/20"
                         >
                             <div className="w-20 h-20 bg-secondary rounded-3xl flex items-center justify-center text-muted-foreground mb-6">
                                 <Archive size={40} />
@@ -101,18 +101,18 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                 <div className="flex flex-col lg:flex-row gap-8 relative z-10">
                                     <div className="flex-1">
                                         <div className="flex flex-wrap items-center gap-4 mb-6">
-                                            <span className="text-[10px] font-black text-white bg-black px-4 py-1.5 uppercase tracking-widest">
+                                            <span className="text-[10px] font-black text-white bg-black px-4 py-1.5 uppercase tracking-widest break-all">
                                                 ID: {session.id}
                                             </span>
-                                            <h3 className="font-light text-3xl tracking-tighter uppercase">{getClientName(session.clientId)}</h3>
-                                            {session.stage === 'Closed' && (
+                                            <h3 className="font-light text-2xl md:text-3xl tracking-tighter uppercase break-words">{getClientName(session.clientId)}</h3>
+                                            {session.stage === 'CLOSED' && (
                                                 <span className="flex items-center gap-1.5 text-[9px] font-black text-black border border-black px-3 py-1 uppercase tracking-widest">
                                                     DOCUMENTED
                                                 </span>
                                             )}
                                         </div>
 
-                                        <div className="flex flex-wrap gap-10 text-sm mb-6">
+                                        <div className="flex flex-wrap gap-6 md:gap-10 text-sm mb-6">
                                             <div className="flex flex-col">
                                                 <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">Commencement</span>
                                                 <span className="font-bold">{getEarliestDate(session.events)}</span>
@@ -177,7 +177,7 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                             </button>
                                         )}
 
-                                        {session.stage === 'Closed' ? (
+                                        {session.stage === 'CLOSED' ? (
                                             <div className="flex items-center gap-2 px-8 py-3 bg-secondary/50 text-muted-foreground rounded-2xl font-bold grayscale cursor-default">
                                                 <Archive size={20} /> Project Archived
                                             </div>
@@ -195,12 +195,12 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                     </div>
                                 </div>
 
-                                <div className="mt-12 relative">
-                                    <div className="absolute top-[1.35rem] left-0 right-0 h-1 bg-secondary rounded-full"></div>
-                                    <div className="flex justify-between items-start">
+                                <div className="mt-8 md:mt-12 relative overflow-x-auto pb-6 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+                                    <div className="absolute top-[1.35rem] left-4 md:left-0 right-4 md:right-0 min-w-[500px] h-1 bg-secondary rounded-full"></div>
+                                    <div className="flex justify-between items-start min-w-[500px]">
                                         {STAGES.map((stage, idx) => {
                                             const currentIdx = STAGES.indexOf(session.stage);
-                                            const isPast = idx < currentIdx || session.stage === 'Closed';
+                                            const isPast = idx < currentIdx || session.stage === 'CLOSED';
                                             const isCurrent = stage === session.stage;
 
                                             return (
@@ -220,7 +220,7 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                                     </span>
 
                                                     <AnimatePresence>
-                                                        {isCurrent && stage === 'Editing' && (
+                                                        {isCurrent && stage === 'EDITING' && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, y: 10 }}
                                                                 animate={{ opacity: 1, y: 0 }}
@@ -248,7 +248,7 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
                                                             </motion.div>
                                                         )}
 
-                                                        {isCurrent && stage === 'Payment' && (
+                                                        {isCurrent && stage === 'PAYMENT' && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, y: 10 }}
                                                                 animate={{ opacity: 1, y: 0 }}

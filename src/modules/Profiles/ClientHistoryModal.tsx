@@ -6,8 +6,8 @@ export function ClientHistoryModal({ client, sessions, onClose }: { client: Clie
     
     // Sort sessions logically: Active first, then by date.
     const sortedSessions = [...sessions].sort((a, b) => {
-        if (a.stage !== 'Closed' && b.stage === 'Closed') return -1;
-        if (a.stage === 'Closed' && b.stage !== 'Closed') return 1;
+        if (a.stage !== 'CLOSED' && b.stage === 'CLOSED') return -1;
+        if (a.stage === 'CLOSED' && b.stage !== 'CLOSED') return 1;
         
         // Secondary sort by earliest event date
         const dateA = a.events?.[0]?.date || '9999-12-31';
@@ -58,23 +58,23 @@ export function ClientHistoryModal({ client, sessions, onClose }: { client: Clie
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.05 }}
-                                    className={`p-6 rounded-2xl border ${session.stage === 'Closed' ? 'bg-secondary/20 border-black/5' : 'bg-white border-black/10 shadow-sm'}`}
+                                    className={`p-6 rounded-2xl border ${session.stage === 'CLOSED' ? 'bg-secondary/20 border-black/5' : 'bg-white border-black/10 shadow-sm'}`}
                                 >
                                     <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                                         <div>
                                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-black/5 px-3 py-1 rounded-full mb-2 inline-block">
                                                 ID: {session.id}
                                             </span>
-                                            <h4 className={`text-xl font-black uppercase tracking-tight ${session.stage === 'Closed' ? 'text-black/60' : 'text-black'}`}>
+                                            <h4 className={`text-xl font-black uppercase tracking-tight ${session.stage === 'CLOSED' ? 'text-black/60' : 'text-black'}`}>
                                                 {eventsText}
                                             </h4>
                                         </div>
                                         
                                         <div className="flex items-center gap-2">
                                             <span className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${
-                                                session.stage === 'Closed' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'
+                                                session.stage === 'CLOSED' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'
                                             }`}>
-                                                {session.stage === 'Closed' ? <CheckCircle size={14} /> : <Activity size={14} />}
+                                                {session.stage === 'CLOSED' ? <CheckCircle size={14} /> : <Activity size={14} />}
                                                 {session.stage}
                                             </span>
                                         </div>
@@ -112,7 +112,7 @@ export function ClientHistoryModal({ client, sessions, onClose }: { client: Clie
                                     </div>
                                     
                                     {/* Sub-events list if not closed, for immediate context */}
-                                    {session.stage !== 'Closed' && session.events && session.events.length > 0 && (
+                                    {session.stage !== 'CLOSED' && session.events && session.events.length > 0 && (
                                         <div className="mt-4 pt-4 border-t border-black/5 flex flex-wrap gap-2">
                                             {session.events.map((ev, i) => (
                                                 <span key={i} className="text-[10px] font-bold text-muted-foreground bg-secondary px-2 py-1 rounded border border-border/50">

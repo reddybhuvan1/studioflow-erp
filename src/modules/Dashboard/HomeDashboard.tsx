@@ -19,15 +19,15 @@ export function HomeDashboard() {
         .slice(0, 5);
 
     const activeSessions = [...sessions]
-        .filter(s => s.stage !== 'Closed')
+        .filter(s => s.stage !== 'CLOSED')
         .slice(0, 5);
 
     return (
         <div className="space-y-8 max-w-7xl mx-auto pb-12">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">STUDIO</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">OVERVIEW</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">STUDIO</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">OVERVIEW</h2>
                 </div>
             </header>
 
@@ -44,7 +44,7 @@ export function HomeDashboard() {
                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-2">
                             <Briefcase size={14} className="text-primary" /> Active Projects
                         </span>
-                        <div className="text-4xl font-black">{sessions.filter(s => s.stage !== 'Closed').length}</div>
+                        <div className="text-4xl font-black">{sessions.filter(s => s.stage !== 'CLOSED').length}</div>
                     </div>
                     <div className="flex-1 p-6 flex flex-col justify-center bg-primary/5">
                         <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">

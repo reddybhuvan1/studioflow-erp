@@ -21,13 +21,13 @@ export function FinancialDashboard() {
     const margin = grossRevenue > 0 ? ((netProfit / grossRevenue) * 100).toFixed(1) : '0.0';
 
     return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-24">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-16 md:pb-24">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
                     <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">FINANCIALS</h2>
                     <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">COMMAND CENTER</h2>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                     <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Fiscal Health Margin</div>
                     <div className={`text-3xl font-black ${parseFloat(margin) > 0 ? 'text-emerald-500' : 'text-destructive'}`}>
                         {margin}%
@@ -102,8 +102,8 @@ export function FinancialDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* Expense Breakdown */}
-                <div className="card-premium p-8">
-                    <div className="flex items-center justify-between mb-8">
+                <div className="card-premium p-6 md:p-8">
+                    <div className="flex items-center justify-between mb-6 md:mb-8">
                         <div>
                             <h3 className="font-black text-lg flex items-center gap-2"><PieChart size={18} className="text-primary" /> Cost Distribution</h3>
                             <p className="text-sm font-bold text-muted-foreground mt-1">Where your money is going (Aggregated)</p>
@@ -138,8 +138,8 @@ export function FinancialDashboard() {
                 </div>
 
                 {/* Overhead Category Breakdown */}
-                <div className="card-premium p-8">
-                    <div className="flex items-center justify-between mb-8">
+                <div className="card-premium p-6 md:p-8">
+                    <div className="flex items-center justify-between mb-6 md:mb-8">
                         <div>
                             <h3 className="font-black text-lg flex items-center gap-2"><BarChart3 size={18} className="text-primary" /> Overhead Categorization</h3>
                             <p className="text-sm font-bold text-muted-foreground mt-1">Detailed breakdown of studio maintenance</p>

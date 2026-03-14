@@ -47,11 +47,11 @@ export function ClientProfile() {
     );
 
     return (
-        <div className="space-y-12 max-w-7xl mx-auto">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="space-y-8 md:space-y-12 max-w-7xl mx-auto">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">CLIENT</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">RECORDS</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">CLIENT</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">RECORDS</h2>
                 </div>
                 <button
                     onClick={() => {
@@ -59,7 +59,7 @@ export function ClientProfile() {
                         setFormData({ name: '', email: '', contactNumber: '', referredBy: '' });
                         setIsCreating(!isCreating);
                     }}
-                    className="h-14 px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4"
+                    className="w-full sm:w-auto h-12 md:h-14 px-6 md:px-8 bg-black text-white hover:bg-zinc-800 transition-all rounded-none font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] flex items-center justify-center sm:justify-start gap-3 md:gap-4 shrink-0"
                 >
                     <UserPlus size={18} />
                     <span>Onboard Client</span>
@@ -74,8 +74,8 @@ export function ClientProfile() {
                         exit={{ opacity: 0, height: 0, y: -20 }}
                         className="overflow-hidden"
                     >
-                        <div className="card-premium p-8 border-primary/20 bg-primary/5">
-                            <h3 className="text-xl font-black mb-6 flex items-center gap-2">
+                        <div className="card-premium p-4 sm:p-6 md:p-8 border-primary/20 bg-primary/5">
+                            <h3 className="text-lg md:text-xl font-black mb-4 md:mb-6 flex items-center gap-2">
                                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
                                     {editingClient ? <Edit2 size={18} /> : <User size={18} />}
                                 </div>
@@ -125,18 +125,18 @@ export function ClientProfile() {
                                         onChange={e => setFormData({ ...formData, referredBy: e.target.value })}
                                     />
                                 </div>
-                                <div className="md:col-span-3 flex justify-end gap-4 mt-4">
+                                <div className="md:col-span-3 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 mt-4">
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setIsCreating(false);
                                             setEditingClient(null);
                                         }}
-                                        className="px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors"
+                                        className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors"
                                     >
                                         Cancel
                                     </button>
-                                    <button type="submit" className="btn-primary">
+                                    <button type="submit" className="w-full sm:w-auto btn-primary">
                                         {editingClient ? 'Save Changes' : 'Generate Profile'}
                                     </button>
                                 </div>
@@ -146,7 +146,7 @@ export function ClientProfile() {
                 )}
             </AnimatePresence>
 
-            <div className="relative group max-w-md">
+            <div className="relative group w-full md:max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                 <input
                     type="text"

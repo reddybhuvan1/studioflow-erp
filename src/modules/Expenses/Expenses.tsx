@@ -36,13 +36,13 @@ export function Expenses() {
         .reduce((sum, e) => sum + e.amount, 0);
 
     return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-24">
-            <header className="flex justify-between items-end pb-8 border-b border-black/5">
+        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-16 md:pb-24">
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 pb-4 md:pb-8 border-b border-black/5">
                 <div>
-                    <h2 className="text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">MAINTENANCE</h2>
-                    <h2 className="text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">STUDIO OVERHEADS</h2>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-foreground mb-1 uppercase">MAINTENANCE</h2>
+                    <h2 className="text-xl md:text-2xl font-black tracking-[0.3em] text-foreground/40 leading-none">STUDIO OVERHEADS</h2>
                 </div>
-                <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-8 py-4 bg-black text-white hover:bg-black/80 font-black uppercase tracking-widest text-[10px] transition-all">
+                <button onClick={() => setShowForm(true)} className="w-full sm:w-auto justify-center sm:justify-start flex items-center gap-2 px-8 py-4 bg-black text-white hover:bg-black/80 font-black uppercase tracking-widest text-[10px] transition-all shrink-0">
                     <Plus size={16} /> Record Expense
                 </button>
             </header>
@@ -71,14 +71,15 @@ export function Expenses() {
             </div>
 
             <div className="card-premium overflow-hidden !p-0">
-                <div className="p-6 bg-secondary/30 flex items-center justify-between border-b border-border/50">
+                <div className="p-4 md:p-6 bg-secondary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/50">
                     <h3 className="text-sm font-black uppercase tracking-widest">Expense Ledger</h3>
                     <div className="relative w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                         <input type="text" placeholder="Search records..." className="w-full bg-white border border-border/50 rounded py-2 pl-9 pr-4 text-xs font-bold outline-none focus:border-primary" />
                     </div>
                 </div>
-                <table className="w-full text-left">
+                <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left min-w-[600px]">
                     <thead>
                         <tr className="text-[9px] font-black uppercase tracking-widest text-muted-foreground border-b border-border/50">
                             <th className="px-6 py-4">Date</th>
@@ -128,6 +129,7 @@ export function Expenses() {
                         )}
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <AnimatePresence>
