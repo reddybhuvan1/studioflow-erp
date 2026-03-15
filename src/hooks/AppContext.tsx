@@ -464,10 +464,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
             expenses, addExpense, deleteExpense,
             equipment, addEquipment, updateEquipment, deleteEquipment,
             galleries,
-            createGallery: (g) => {
-                const newG = { ...g, id: Math.random().toString(36).substr(2, 9).toUpperCase(), createdAt: new Date().toISOString(), images: [] };
-                setGalleries(prev => [...prev, newG]);
-                api.post('/galleries', g).catch(console.error);
+            createGallery: async (g) => {
+                try {
+                    const resp = await api.post<Gallery>('/galleries', g);
+                    setGalleries(prev => [...prev, resp]);
+                } catch (err) {
+                    console.error("Failed to create gallery:", err);
+                }
             },
             updateGallery: (id, updates) => {
                 setGalleries(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g));

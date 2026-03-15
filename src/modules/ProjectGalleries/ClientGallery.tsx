@@ -7,23 +7,35 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function ClientGallery() {
     const { id: paramId } = useParams();
-    // Fallback for when not using a full router setup
-    const id = paramId || window.location.pathname.split('/').pop();
-    
+    // More robust identification of the ID from path
+    const [id, setId] = useState<string>('');
+
+    useEffect(() => {
+        if (paramId) {
+            setId(paramId);
+        } else {
+            const matches = window.location.pathname.match(/\/gallery\/([^/]+)/);
+            if (matches && matches[1]) setId(matches[1]);
+        }
+    }, [paramId]);
+
     const [gallery, setGallery] = useState<Gallery | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
     const [localSelections, setLocalSelections] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
+        if (!id) return;
         const fetchGallery = async () => {
             try {
                 const data = await api.get<Gallery>(`/galleries/${id}`);
                 setGallery(data);
                 const selections: Record<string, boolean> = {};
-                data.images.forEach(img => {
-                    if (img.isSelected) selections[img.id] = true;
-                });
+                if (data.images) {
+                    data.images.forEach(img => {
+                        if (img.isSelected) selections[img.id] = true;
+                    });
+                }
                 setLocalSelections(selections);
             } catch (err) {
                 console.error("Failed to load gallery:", err);
@@ -31,7 +43,7 @@ export function ClientGallery() {
                 setLoading(false);
             }
         };
-        if (id) fetchGallery();
+        fetchGallery();
     }, [id]);
 
     const toggleHeart = async (imageId: string) => {
@@ -42,7 +54,6 @@ export function ClientGallery() {
             await api.put(`/gallery-images/${imageId}/toggle`, {});
         } catch (err) {
             console.error("Failed to persist selection:", err);
-            // Revert on failure
             setLocalSelections(prev => ({ ...prev, [imageId]: isCurrentlySelected }));
         }
     };
@@ -60,12 +71,13 @@ export function ClientGallery() {
         return (
             <div className="fixed inset-0 bg-white flex flex-col items-center justify-center gap-6">
                 <h1 className="text-6xl font-black tracking-tighter opacity-10">404</h1>
-                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Gallery Not Found or Access Expired</p>
-                <button onClick={() => window.close()} className="btn-primary px-8">Return</button>
+                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Gallery Not Found</p>
+                <button onClick={() => window.location.href = '/'} className="btn-primary px-8">Return Home</button>
             </div>
         );
     }
 
+    const images = gallery.images || [];
     const selectionCount = Object.values(localSelections).filter(Boolean).length;
 
     return (
@@ -73,7 +85,7 @@ export function ClientGallery() {
             {/* Minimal Header */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-black/5 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-black text-white flex items-center justify-center">
+                    <div className="w-10 h-10 bg-black text-white flex items-center justify-center cursor-pointer" onClick={() => window.history.back()}>
                         <ArrowLeft size={20} />
                     </div>
                     <div>
@@ -85,16 +97,16 @@ export function ClientGallery() {
                 <div className="flex items-center gap-6">
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] font-black uppercase tracking-widest">{selectionCount} Selected</span>
-                        <div className="w-24 h-1 bg-secondary rounded-full overflow-hidden mt-1">
+                        <div className="w-24 h-1 bg-secondary rounded-full overflow-hidden mt-1 text-zinc-100">
                             <motion.div 
                                 initial={{ width: 0 }}
-                                animate={{ width: `${(selectionCount / gallery.images.length) * 100}%` }}
+                                animate={{ width: images.length > 0 ? `${(selectionCount / images.length) * 100}%` : 0 }}
                                 className="h-full bg-primary"
                             />
                         </div>
                     </div>
                     <button className="hidden sm:flex items-center gap-2 px-6 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all">
-                        <Download size={14} /> Finish Selection
+                        <Check size={14} /> Confirm Selections
                     </button>
                 </div>
             </nav>
@@ -118,22 +130,32 @@ export function ClientGallery() {
 
             {/* Grid */}
             <main className="px-4 pb-32 max-w-[1600px] mx-auto">
-                <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
-                    {gallery.images.map((image, idx) => (
-                        <motion.div
-                            key={image.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: (idx % 4) * 0.1 }}
-                            className="relative group bg-white overflow-hidden rounded-sm break-inside-avoid"
-                        >
-                            <img 
-                                src={image.url} 
-                                alt="" 
-                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
-                                onClick={() => setSelectedImage(image)}
-                            />
+                {images.length === 0 ? (
+                    <div className="py-20 text-center opacity-20 flex flex-col items-center gap-4 uppercase tracking-[0.4em] font-black text-xs">
+                        <ImageIcon size={48} />
+                        Waiting for images...
+                    </div>
+                ) : (
+                    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+                        {images.map((image, idx) => (
+                            <motion.div
+                                key={image.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: (idx % 4) * 0.05 }}
+                                className="relative group bg-zinc-200 overflow-hidden rounded-sm break-inside-avoid shadow-sm min-h-[200px]"
+                            >
+                                <img 
+                                    src={image.url} 
+                                    alt="Gallery item" 
+                                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
+                                    onClick={() => setSelectedImage(image)}
+                                    onError={(e) => {
+                                        // Fallback for broken images to keep the UI clean
+                                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop';
+                                    }}
+                                />
                             
                             {/* Overlay Controls */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-6">
