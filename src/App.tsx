@@ -13,6 +13,8 @@ import { FinancialDashboard } from './modules/Financials/FinancialDashboard';
 import { InventoryVault } from './modules/Inventory/InventoryVault';
 import { useApp, AppProvider } from './hooks/AppContext';
 import { Login } from './modules/Auth/Login';
+import { GalleryManagement } from './modules/ProjectGalleries/GalleryManagement';
+import { ClientGallery } from './modules/ProjectGalleries/ClientGallery';
 
 function AppContent() {
   const { user } = useApp();
@@ -20,6 +22,14 @@ function AppContent() {
 
   if (!user) {
     return <Login />;
+  }
+
+  // Handle public gallery route separately if we're not using a router (v1 approach)
+  // For v2 we'll check path manually if needed, but since we're in a single-page state app
+  // let's check if the URL starts with /gallery/
+  const path = window.location.pathname;
+  if (path.startsWith('/gallery/')) {
+    return <ClientGallery />;
   }
 
   const renderView = () => {
@@ -35,6 +45,7 @@ function AppContent() {
       case 'Expenses': return <Expenses />;
       case 'Financials': return <FinancialDashboard />;
       case 'Equipment': return <InventoryVault />;
+      case 'Galleries': return <GalleryManagement />;
       default: return <HomeDashboard />;
     }
   };

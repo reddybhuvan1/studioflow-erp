@@ -154,6 +154,26 @@ export interface Session {
   clientEquipment: ClientEquipment[];
 }
 
+
+export interface GalleryImage {
+  id: string;
+  galleryId: string;
+  url: string;
+  isSelected: boolean;
+  notes?: string;
+  createdAt: string;
+}
+
+export interface Gallery {
+  id: string;
+  sessionId: string;
+  title: string;
+  description?: string;
+  isPublished: boolean;
+  images: GalleryImage[];
+  createdAt: string;
+}
+
 export interface AppState {
   clients: Client[];
   employees: Employee[];
@@ -162,5 +182,8 @@ export interface AppState {
   sessions: Session[];
   expenses: Expense[];
   equipment: Equipment[];
+  galleries: Gallery[];
   user: User | null;
+  leads: Lead[];
+  jobs: Job[];
 }

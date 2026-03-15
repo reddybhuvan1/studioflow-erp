@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { LayoutDashboard, Heart, Settings, LogOut, Bell, Search, User, Target, Calendar as CalendarIcon, Wallet, ActivitySquare, Package, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Heart, Settings, LogOut, Bell, Search, User, Target, Calendar as CalendarIcon, Wallet, ActivitySquare, Package, Menu, X, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../hooks/AppContext';
 
@@ -23,6 +23,7 @@ export function Layout({ children, currentView, onViewChange }: {
         { id: 'Expenses', icon: <Wallet size={20} />, label: 'Expenses' },
         { id: 'Financials', icon: <ActivitySquare size={20} />, label: 'Financials' },
         { id: 'Equipment', icon: <Package size={20} />, label: 'Equipment' },
+        { id: 'Galleries', icon: <ImageIcon size={20} />, label: 'Project Galleries' },
         { id: 'Settings', icon: <Settings size={20} />, label: 'Settings' },
     ];
 

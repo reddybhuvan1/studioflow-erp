@@ -160,21 +160,46 @@ model Job {
   lead             Lead?    @relation(fields: [leadId], references: [id])
 }
 
+
 model Session {
-  id            String        @id @default(uuid())
-  clientId      String
-  client        Client        @relation(fields: [clientId], references: [id])
-  events        Json          // Storing ProjectEvent[] as JSON
-  quotation     String
-  grandTotal    Float
-  stage         WorkflowStage
-  editingStatus Json          // Storing {photos, videos}
-  isPaid        Boolean       @default(false)
-  isDelivered   Boolean       @default(false)
-  payments      ClientPayment[]
+  id              String            @id @default(uuid())
+  clientId        String
+  client          Client            @relation(fields: [clientId], references: [id])
+  events          Json              // Storing ProjectEvent[] as JSON
+  quotation       String
+  grandTotal      Float
+  stage           WorkflowStage
+  editingStatus   Json              // Storing {photos, videos}
+  isPaid          Boolean           @default(false)
+  isDelivered     Boolean           @default(false)
+  payments        ClientPayment[]
   clientEquipment ClientEquipment[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  gallery         Gallery?          // One-to-one relation
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Gallery {
+  id          String         @id @default(uuid())
+  sessionId   String         @unique
+  session     Session        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  isPublished Boolean        @default(false)
+  images      GalleryImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model GalleryImage {
+  id        String   @id @default(uuid())
+  galleryId String
+  gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  url       String
+  isSelected Boolean  @default(false)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ClientEquipment {

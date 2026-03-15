@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, ClientPayment, ClientEquipment, Expense, Equipment } from '../types';
+import type { Client, Employee, Session, AppState, User, Lead, Job, Freelancer, FreelancerPayment, ClientPayment, ClientEquipment, Expense, Equipment, Gallery, GalleryImage } from '../types';
 import { api } from '../api';
 
 interface AppContextType extends AppState {
@@ -45,6 +45,13 @@ interface AppContextType extends AppState {
     addEquipment: (equipment: Equipment) => void;
     updateEquipment: (id: string, updates: Partial<Equipment>) => void;
     deleteEquipment: (id: string) => void;
+    galleries: Gallery[];
+    createGallery: (gallery: Omit<Gallery, 'id' | 'createdAt' | 'images'>) => void;
+    updateGallery: (id: string, updates: Partial<Gallery>) => void;
+    deleteGallery: (id: string) => void;
+    addImagesToGallery: (galleryId: string, imageUrls: string[]) => void;
+    toggleImageSelection: (imageId: string) => void;
+    deleteImage: (imageId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -63,6 +70,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [freelancerPayments, setFreelancerPayments] = useState<FreelancerPayment[]>([]);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [equipment, setEquipment] = useState<Equipment[]>([]);
+    const [galleries, setGalleries] = useState<Gallery[]>([]);
 
     useEffect(() => {
         // Fetch all data from backend on mount
@@ -77,7 +85,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     api.get<Freelancer[]>('/freelancers'),
                     api.get<FreelancerPayment[]>('/freelancer-payments'),
                     api.get<Expense[]>('/expenses'),
-                    api.get<Equipment[]>('/equipment')
+                    api.get<Equipment[]>('/equipment'),
+                    api.get<Gallery[]>('/galleries')
                 ]);
 
                 if (results[0].status === 'fulfilled') setClients(results[0].value);
@@ -89,6 +98,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 if (results[6].status === 'fulfilled') setFreelancerPayments(results[6].value);
                 if (results[7].status === 'fulfilled') setExpenses(results[7].value);
                 if (results[8].status === 'fulfilled') setEquipment(results[8].value);
+                if (results[9].status === 'fulfilled') setGalleries(results[9].value);
 
                 // Log any rejections for debugging
                 results.forEach((res, index) => {
@@ -452,7 +462,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
             freelancers, addFreelancer, updateFreelancer, deleteFreelancer,
             freelancerPayments, addFreelancerPayment, updateFreelancerPayment, deleteFreelancerPayment,
             expenses, addExpense, deleteExpense,
-            equipment, addEquipment, updateEquipment, deleteEquipment
+            equipment, addEquipment, updateEquipment, deleteEquipment,
+            galleries,
+            createGallery: (g) => {
+                const newG = { ...g, id: Math.random().toString(36).substr(2, 9).toUpperCase(), createdAt: new Date().toISOString(), images: [] };
+                setGalleries(prev => [...prev, newG]);
+                api.post('/galleries', g).catch(console.error);
+            },
+            updateGallery: (id, updates) => {
+                setGalleries(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g));
+                api.put(`/galleries/${id}`, updates).catch(console.error);
+            },
+            deleteGallery: (id) => {
+                setGalleries(prev => prev.filter(g => g.id !== id));
+                api.delete(`/galleries/${id}`).catch(console.error);
+            },
+            addImagesToGallery: async (galleryId, urls) => {
+                const resp = await api.post<GalleryImage[]>(`/galleries/${galleryId}/images`, urls.map(url => ({ url })));
+                setGalleries(prev => prev.map(g => g.id === galleryId ? { ...g, images: [...g.images, ...resp] } : g));
+            },
+            toggleImageSelection: (imageId) => {
+                setGalleries(prev => prev.map(g => ({
+                    ...g,
+                    images: g.images.map((img: GalleryImage) => img.id === imageId ? { ...img, isSelected: !img.isSelected } : img)
+                })));
+                api.put(`/gallery-images/${imageId}/toggle`, {}).catch(console.error);
+            },
+            deleteImage: (imageId) => {
+                setGalleries(prev => prev.map(g => ({
+                    ...g,
+                    images: g.images.filter((img: GalleryImage) => img.id !== imageId)
+                })));
+                api.delete(`/gallery-images/${imageId}`).catch(console.error);
+            }
         }}>
             {children}
         </AppContext.Provider>

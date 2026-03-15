@@ -290,6 +290,82 @@ app.delete('/api/equipment/:id', async (req, res) => {
   res.json({ success: true });
 });
 
+// Galleries
+app.get('/api/galleries', async (req, res) => {
+  const galleries = await prisma.gallery.findMany({ include: { images: true } });
+  res.json(galleries);
+});
+
+app.get('/api/galleries/:id', async (req, res) => {
+  const gallery = await prisma.gallery.findUnique({
+    where: { id: req.params.id },
+    include: { images: true }
+  });
+  if (!gallery) return res.status(404).json({ error: 'Gallery not found' });
+  res.json(gallery);
+});
+
+app.post('/api/galleries', async (req, res) => {
+  const { images, ...data } = req.body;
+  const gallery = await prisma.gallery.create({
+    data: {
+      ...data,
+      images: images ? { create: images } : undefined
+    },
+    include: { images: true }
+  });
+  res.json(gallery);
+});
+
+app.put('/api/galleries/:id', async (req, res) => {
+  const { images, ...data } = req.body;
+  const gallery = await prisma.gallery.update({
+    where: { id: req.params.id },
+    data,
+    include: { images: true }
+  });
+  res.json(gallery);
+});
+
+app.delete('/api/galleries/:id', async (req, res) => {
+  await prisma.gallery.delete({ where: { id: req.params.id } });
+  res.json({ success: true });
+});
+
+app.post('/api/galleries/:id/images', async (req, res) => {
+  const images = req.body; // Expecting GalleryImage[]
+  const galleryId = req.params.id;
+  
+  const createdImages = await Promise.all(
+    images.map((img: any) => 
+      prisma.galleryImage.create({
+        data: {
+          galleryId,
+          url: img.url,
+          isSelected: false
+        }
+      })
+    )
+  );
+  res.json(createdImages);
+});
+
+app.put('/api/gallery-images/:id/toggle', async (req, res) => {
+  const image = await prisma.galleryImage.findUnique({ where: { id: req.params.id } });
+  if (!image) return res.status(404).json({ error: 'Image not found' });
+  
+  const updated = await prisma.galleryImage.update({
+    where: { id: req.params.id },
+    data: { isSelected: !image.isSelected }
+  });
+  res.json(updated);
+});
+
+app.delete('/api/gallery-images/:id', async (req, res) => {
+  await prisma.galleryImage.delete({ where: { id: req.params.id } });
+  res.json({ success: true });
+});
+
 // Start
 app.listen(PORT as number, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
