@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api';
 import type { Gallery, GalleryImage } from '../../types';
-import { Heart, Loader2, ArrowLeft, Download, Maximize2, X, Check } from 'lucide-react';
+import { Heart, Loader2, ArrowLeft, Maximize2, X, Check, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function ClientGallery() {
