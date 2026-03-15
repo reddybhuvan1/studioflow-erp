@@ -6,7 +6,10 @@ import { Heart, Loader2, ArrowLeft, Download, Maximize2, X, Check } from 'lucide
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function ClientGallery() {
-    const { id } = useParams();
+    const { id: paramId } = useParams();
+    // Fallback for when not using a full router setup
+    const id = paramId || window.location.pathname.split('/').pop();
+    
     const [gallery, setGallery] = useState<Gallery | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
