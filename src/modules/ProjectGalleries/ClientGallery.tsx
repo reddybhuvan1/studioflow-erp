@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function ClientGallery() {
     const { id: paramId } = useParams();
-    // More robust identification of the ID from path
     const [id, setId] = useState<string>('');
 
     useEffect(() => {
@@ -82,7 +81,6 @@ export function ClientGallery() {
 
     return (
         <div className="min-h-screen bg-[#fafafa] text-black selection:bg-black selection:text-white">
-            {/* Minimal Header */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-black/5 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-black text-white flex items-center justify-center cursor-pointer" onClick={() => window.history.back()}>
@@ -111,7 +109,6 @@ export function ClientGallery() {
                 </div>
             </nav>
 
-            {/* Hero Section */}
             <header className="pt-32 pb-20 px-6 text-center max-w-4xl mx-auto space-y-6">
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -128,7 +125,6 @@ export function ClientGallery() {
                 </p>
             </header>
 
-            {/* Grid */}
             <main className="px-4 pb-32 max-w-[1600px] mx-auto">
                 {images.length === 0 ? (
                     <div className="py-20 text-center opacity-20 flex flex-col items-center gap-4 uppercase tracking-[0.4em] font-black text-xs">
@@ -152,38 +148,34 @@ export function ClientGallery() {
                                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
                                     onClick={() => setSelectedImage(image)}
                                     onError={(e) => {
-                                        // Fallback for broken images to keep the UI clean
                                         (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop';
                                     }}
                                 />
-                            
-                            {/* Overlay Controls */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-6">
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); toggleHeart(image.id); }}
-                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${localSelections[image.id] ? 'bg-primary text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white hover:text-black'}`}
-                                >
-                                    <Heart size={20} fill={localSelections[image.id] ? "currentColor" : "none"} />
-                                </button>
-                                <button 
-                                    onClick={() => setSelectedImage(image)}
-                                    className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-all"
-                                >
-                                    <Maximize2 size={20} />
-                                </button>
-                            </div>
-
-                            {localSelections[image.id] && (
-                                <div className="absolute top-4 left-4 bg-primary text-white p-1 rounded-full shadow-xl">
-                                    <Check size={12} strokeWidth={4} />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-6">
+                                    <button 
+                                        onClick={(e) => { e.stopPropagation(); toggleHeart(image.id); }}
+                                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${localSelections[image.id] ? 'bg-primary text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white hover:text-black'}`}
+                                    >
+                                        <Heart size={20} fill={localSelections[image.id] ? "currentColor" : "none"} />
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedImage(image)}
+                                        className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-all"
+                                    >
+                                        <Maximize2 size={20} />
+                                    </button>
                                 </div>
-                            )}
-                        </motion.div>
-                    ))}
-                </div>
+                                {localSelections[image.id] && (
+                                    <div className="absolute top-4 left-4 bg-primary text-white p-1 rounded-full shadow-xl">
+                                        <Check size={12} strokeWidth={4} />
+                                    </div>
+                                )}
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </main>
 
-            {/* Lightbox */}
             <AnimatePresence>
                 {selectedImage && (
                     <motion.div 
@@ -220,7 +212,6 @@ export function ClientGallery() {
                 )}
             </AnimatePresence>
 
-            {/* Footer */}
             <footer className="py-20 border-t border-black/5 text-center">
                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-20">Powered by StudioFlow ERP</p>
             </footer>
