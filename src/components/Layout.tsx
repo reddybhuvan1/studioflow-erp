@@ -12,19 +12,27 @@ export function Layout({ children, currentView, onViewChange }: {
     const isAdmin = user?.role === 'admin';
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const menuItems = [
+    const allMenuItems = [
         { id: 'Dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { id: 'Clients', icon: <User size={20} />, label: 'Clients' },
         { id: 'Leads', icon: <Target size={20} />, label: 'Leads' },
         { id: 'Calendar', icon: <CalendarIcon size={20} />, label: 'Calendar' },
         { id: 'Production', icon: <LayoutDashboard size={20} />, label: 'Production' },
-        ...(isAdmin ? [{ id: 'Employees', icon: <Heart size={20} />, label: 'Staff' }] : []),
+        { id: 'Employees', icon: <Heart size={20} />, label: 'Staff' },
         { id: 'Freelancers', icon: <User size={20} />, label: 'Freelancers' },
         { id: 'Expenses', icon: <Wallet size={20} />, label: 'Expenses' },
         { id: 'Financials', icon: <ActivitySquare size={20} />, label: 'Financials' },
         { id: 'Equipment', icon: <Package size={20} />, label: 'Equipment' },
         { id: 'Settings', icon: <Settings size={20} />, label: 'Settings' },
     ];
+
+    const menuItems = allMenuItems.filter(item => {
+        if (isAdmin) return true;
+        if (item.id === 'Dashboard') return true; // Always visible
+        if (item.id === 'Settings') return true; // Always visible
+        if (item.id === 'Employees') return false; // Never visible to standard employees
+        return user?.permissions?.includes(item.id) ?? false;
+    });
 
     const handleNavClick = (id: string) => {
         onViewChange(id);

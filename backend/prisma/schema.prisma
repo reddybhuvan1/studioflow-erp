@@ -111,6 +111,7 @@ model Employee {
   currentSalary String
   email         String?  @unique
   password      String?
+  permissions   String[] @default([])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

@@ -37,6 +37,7 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  permissions?: string[];
 }
 
 export interface Client {
@@ -60,6 +61,7 @@ export interface Employee {
   currentSalary: string;
   email?: string;
   password?: string;
+  permissions?: string[];
 }
 
 export interface Freelancer {

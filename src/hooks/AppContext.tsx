@@ -254,7 +254,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     id: data.id,
                     name: data.name,
                     email: data.email || cleanEmail,
-                    role: data.role || 'employee'
+                    role: data.role || 'employee',
+                    permissions: data.permissions || []
                 });
                 return true;
             }
