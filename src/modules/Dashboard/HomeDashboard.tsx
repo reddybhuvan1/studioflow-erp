@@ -1,6 +1,6 @@
 import { useApp } from '../../hooks/AppContext';
 
-import { Target, Briefcase, ChevronRight, PieChart, TrendingUp, CheckCircle, Calendar, IndianRupee } from 'lucide-react';
+import { Target, Briefcase, ChevronRight, CheckCircle, Calendar, IndianRupee } from 'lucide-react';
 
 export function HomeDashboard() {
     const { leads, sessions, clients } = useApp();
@@ -32,7 +32,7 @@ export function HomeDashboard() {
             </header>
 
             {/* Top Metrics Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-3 card-premium p-0 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-border/50">
                     <div className="flex-1 p-6 flex flex-col justify-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-2">
@@ -54,51 +54,6 @@ export function HomeDashboard() {
                             ₹{sessions.reduce((acc, s) => acc + s.grandTotal, 0).toLocaleString('en-IN')}
                         </div>
                     </div>
-                </div>
-
-                {/* Lead Sources Pie Chart Widget */}
-                <div className="card-premium p-6 flex flex-col items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 left-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                        <PieChart size={14} /> Sources
-                    </div>
-                    <div className="w-32 h-32 rounded-full conic-gradient-sources shadow-xl shadow-primary/5 mt-6 mb-4 relative flex items-center justify-center">
-                         <div className="w-16 h-16 bg-white rounded-full"></div>
-                    </div>
-                    <div className="flex gap-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-400"></div> Instagram</div>
-                        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-violet-500"></div> Referral</div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Revenue Line Chart Widget Placeholder */}
-            <div className="card-premium p-6 h-64 flex flex-col">
-                <div className="flex justify-between items-center mb-6">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                        <TrendingUp size={14} className="text-primary" /> Revenue Comparison
-                    </span>
-                    <div className="flex gap-2">
-                        {['7 Days', '30 Days', 'Mtd', 'Ytd'].map((t, i) => (
-                            <button key={t} className={`px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest ${i === 1 ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-secondary/50'}`}>
-                                {t}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-                <div className="flex-1 relative w-full flex items-end justify-between px-4 pb-2">
-                    {/* CSS mock line chart */}
-                    <div className="absolute bottom-6 left-0 right-0 h-px bg-border/50"></div>
-                    <div className="absolute bottom-12 left-0 right-0 h-px bg-border/50"></div>
-                    <div className="absolute bottom-18 left-0 right-0 h-px bg-border/50"></div>
-                    
-                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-                        <path d="M0,90 L20,80 L40,85 L60,60 L80,30 L100,10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary/30" />
-                        <path d="M0,95 L20,90 L40,70 L60,50 L80,55 L100,20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" />
-                    </svg>
-                    
-                    {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(m => (
-                        <span key={m} className="text-[9px] font-black uppercase text-muted-foreground relative z-10">{m}</span>
-                    ))}
                 </div>
             </div>
 

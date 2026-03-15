@@ -41,7 +41,7 @@ export function SessionCreation() {
         if (events.some(ev => !ev.name || !ev.date)) return alert('Please fill in all event names and dates');
 
         createSession({
-            id: `SESS-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+            id: `PRJ-${Math.floor(10000 + Math.random() * 90000)}`,
             clientId: formData.clientId,
             events: events,
             quotation: formData.quotation,

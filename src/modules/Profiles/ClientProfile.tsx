@@ -32,7 +32,7 @@ export function ClientProfile() {
             updateClient(editingClient.id, formData);
         } else {
             addClient({
-                id: Math.random().toString(36).substr(2, 9).toUpperCase(),
+                id: `CLT-${Math.floor(10000 + Math.random() * 90000)}`,
                 ...formData,
                 history: []
             });

@@ -50,7 +50,7 @@ export function EmployeeProfile() {
             updateEmployee(editingId, formData);
         } else {
             addEmployee({
-                id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+                id: `STF-${Math.floor(10000 + Math.random() * 90000)}`,
                 ...formData
             });
         }
