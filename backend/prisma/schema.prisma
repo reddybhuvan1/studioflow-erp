@@ -14,10 +14,9 @@ enum UserRole {
 }
 
 enum LeadStatus {
-  NEW_LEAD
-  CONTACTED
   QUOTED
   FOLLOWED_UP
+  AGREED
   LOST
 }
 

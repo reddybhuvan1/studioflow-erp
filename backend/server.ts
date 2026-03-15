@@ -50,22 +50,46 @@ app.delete('/api/clients/:id', async (req: any, res: any) => {
   res.json({ success: true });
 });
 
+// Helper to map UI display strings to Prisma Enums
+const toPrismaEnum = (val: string) => val.toUpperCase().replace(/\s+/g, '_');
+const fromPrismaEnum = (val: string) => {
+  return val.split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
+const mapLeadToUI = (lead: any) => ({
+  ...lead,
+  type: fromPrismaEnum(lead.type),
+  status: fromPrismaEnum(lead.status)
+});
+
 // Leads
 app.get('/api/leads', async (req, res) => {
   const leads = await prisma.lead.findMany();
-  res.json(leads);
+  res.json(leads.map(mapLeadToUI));
 });
 
 app.post('/api/leads', async (req: any, res: any) => {
-  const { jobs, ...data } = req.body;
+  const { jobs, ...rawData } = req.body;
+  const data = {
+    ...rawData,
+    type: toPrismaEnum(rawData.type),
+    status: toPrismaEnum(rawData.status)
+  };
   const lead = await prisma.lead.create({ data });
-  res.json(lead);
+  res.json(mapLeadToUI(lead));
 });
 
 app.put('/api/leads/:id', async (req: any, res: any) => {
-  const { jobs, ...data } = req.body;
+  const { jobs, ...rawData } = req.body;
+  const data = {
+    ...rawData,
+    type: rawData.type ? toPrismaEnum(rawData.type) : undefined,
+    status: rawData.status ? toPrismaEnum(rawData.status) : undefined
+  };
   const lead = await prisma.lead.update({ where: { id: req.params.id }, data });
-  res.json(lead);
+  res.json(mapLeadToUI(lead));
 });
 
 app.delete('/api/leads/:id', async (req: any, res: any) => {
@@ -73,22 +97,35 @@ app.delete('/api/leads/:id', async (req: any, res: any) => {
   res.json({ success: true });
 });
 
+const mapJobToUI = (job: any) => ({
+  ...job,
+  type: fromPrismaEnum(job.type)
+});
+
 // Jobs
 app.get('/api/jobs', async (req, res) => {
   const jobs = await prisma.job.findMany();
-  res.json(jobs);
+  res.json(jobs.map(mapJobToUI));
 });
 
 app.post('/api/jobs', async (req: any, res: any) => {
-  const { lead, ...data } = req.body;
+  const { lead, ...rawData } = req.body;
+  const data = {
+    ...rawData,
+    type: toPrismaEnum(rawData.type)
+  };
   const job = await prisma.job.create({ data });
-  res.json(job);
+  res.json(mapJobToUI(job));
 });
 
 app.put('/api/jobs/:id', async (req: any, res: any) => {
-  const { lead, ...data } = req.body;
+  const { lead, ...rawData } = req.body;
+  const data = {
+    ...rawData,
+    type: rawData.type ? toPrismaEnum(rawData.type) : undefined
+  };
   const job = await prisma.job.update({ where: { id: req.params.id }, data });
-  res.json(job);
+  res.json(mapJobToUI(job));
 });
 
 app.delete('/api/jobs/:id', async (req: any, res: any) => {

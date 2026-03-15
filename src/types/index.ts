@@ -1,6 +1,6 @@
 export type WorkflowStage = 'INTAKE' | 'PHOTOGRAPHY' | 'EDITING' | 'PAYMENT' | 'DELIVERY' | 'CLOSED';
 export type UserRole = 'admin' | 'employee';
-export type LeadStatus = 'New Lead' | 'Contacted' | 'Quoted' | 'Followed Up' | 'Lost';
+export type LeadStatus = 'Quoted' | 'Followed Up' | 'Agreed' | 'Lost';
 export type JobType = 'Wedding' | 'Portrait' | 'Corporate' | 'Family' | 'Event' | 'Other';
 
 export interface Lead {

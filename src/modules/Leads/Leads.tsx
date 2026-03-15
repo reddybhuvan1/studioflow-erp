@@ -8,19 +8,18 @@ import { useApp } from '../../hooks/AppContext';
 import type { Lead, LeadStatus, JobType } from '../../types';
 
 const STATUS_COLORS: Record<LeadStatus, string> = {
-    'New Lead': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    'Contacted': 'bg-blue-100 text-blue-700 border-blue-200',
     'Quoted': 'bg-violet-100 text-violet-700 border-violet-200',
     'Followed Up': 'bg-amber-100 text-amber-700 border-amber-200',
+    'Agreed': 'bg-emerald-100 text-emerald-700 border-emerald-200',
     'Lost': 'bg-red-100 text-red-600 border-red-200',
 };
 
 const JOB_TYPES: JobType[] = ['Wedding', 'Portrait', 'Corporate', 'Family', 'Event', 'Other'];
-const STATUSES: LeadStatus[] = ['New Lead', 'Contacted', 'Quoted', 'Followed Up', 'Lost'];
+const STATUSES: LeadStatus[] = ['Quoted', 'Followed Up', 'Agreed', 'Lost'];
 
 const EMPTY_FORM: Omit<Lead, 'id' | 'createdAt'> = {
     name: '', email: '', contactNumber: '', type: 'Wedding',
-    shootDate: '', status: 'New Lead', nextTask: '', notes: '', referredBy: '',
+    shootDate: '', status: 'Quoted', nextTask: '', notes: '', referredBy: '',
     events: []
 };
 
