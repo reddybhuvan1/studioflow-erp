@@ -1,5 +1,5 @@
 import { useApp } from '../../hooks/AppContext';
-import { ArrowRight, CheckCircle2, CheckCircle, Plus, Camera, Edit3, CreditCard, Send, Archive, HardDrive } from 'lucide-react';
+import { CheckCircle, ArrowRight, Camera, Trash2, Plus, Edit3, CreditCard, Send, Archive, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { WorkflowStage, Session } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PaymentModal } from './PaymentModal';
@@ -169,11 +169,11 @@ export function Dashboard({ onNewProject }: { onNewProject?: () => void }) {
 
                                         {isAdmin && (
                                             <button
-                                                onClick={() => handleDelete(session.id)}
-                                                className="p-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all"
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(session.id); }}
+                                                className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg shadow-sm border border-red-100 transition-all opacity-0 group-hover:opacity-100 relative z-10"
                                                 title="Delete Project"
                                             >
-                                                <Archive size={20} />
+                                                <Trash2 size={16} />
                                             </button>
                                         )}
 

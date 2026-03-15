@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useApp } from '../../hooks/AppContext';
-import { Plus, IndianRupee, Wifi, Zap, Droplets, Wrench, Shield, Hash, Search, Calendar as CalendarIcon, FileText } from 'lucide-react';
+import { Plus, IndianRupee, Wifi, Zap, Droplets, Wrench, Shield, Hash, Search, Calendar as CalendarIcon, FileText, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Expense, ExpenseCategory } from '../../types';
 
 export function Expenses() {
-    const { expenses, addExpense, deleteExpense } = useApp();
+    const { expenses, addExpense, deleteExpense, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState<Partial<Expense>>({
         category: 'Rent', amount: 0, date: new Date().toISOString().split('T')[0], description: ''
@@ -116,13 +117,15 @@ export function Expenses() {
                                         {expense.amount.toLocaleString('en-IN')}
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        <button 
-                                            onClick={() => deleteExpense(expense.id)}
-                                            className="text-[10px] font-black uppercase tracking-widest text-destructive/50 hover:text-destructive transition-colors p-2"
-                                            title="Remove Entry"
-                                        >
-                                            Void
-                                        </button>
+                                        {isAdmin && (
+                                            <button 
+                                                onClick={() => deleteExpense(expense.id)}
+                                                className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Delete Expense"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))

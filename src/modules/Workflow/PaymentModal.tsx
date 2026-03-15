@@ -5,7 +5,8 @@ import type { Session } from '../../types';
 import { motion } from 'framer-motion';
 
 export function PaymentModal({ session, onClose }: { session: Session, onClose: () => void }) {
-    const { addClientPayment, deleteClientPayment } = useApp();
+    const { addClientPayment, deleteClientPayment, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const payments = session.payments || [];
     
     const [amount, setAmount] = useState('');
@@ -98,12 +99,15 @@ export function PaymentModal({ session, onClose }: { session: Session, onClose: 
                                                 </div>
                                             </div>
                                         </div>
-                                        <button 
-                                            onClick={() => { if(window.confirm('Delete this payment record?')) deleteClientPayment(payment.id) }} 
-                                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
+                                        {isAdmin && (
+                                            <button 
+                                                onClick={() => { if(window.confirm('Delete this payment record?')) deleteClientPayment(payment.id) }} 
+                                                className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors ml-2 opacity-0 group-hover:opacity-100"
+                                                title="Delete Payment"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </div>
                                 ))}
                             </div>

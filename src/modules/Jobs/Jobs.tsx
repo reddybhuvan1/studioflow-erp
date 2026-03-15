@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    Briefcase, Trash2, Search, ChevronDown,
-    Calendar, Clock, CheckCircle2, ArrowRight, BarChart3, Filter
-} from 'lucide-react';
+import { Briefcase, Calendar, Clock, Search, Filter, Edit2, Trash2, BarChart3, CheckCircle2, ChevronDown, ArrowRight } from 'lucide-react';
 import { useApp } from '../../hooks/AppContext';
 import type { Job, JobType } from '../../types';
 
@@ -15,7 +12,8 @@ const EMPTY_FORM = {
 };
 
 export function Jobs() {
-    const { jobs, addJob, updateJob, deleteJob } = useApp();
+    const { jobs, addJob, updateJob, deleteJob, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -205,9 +203,11 @@ export function Jobs() {
                         className="group card-premium hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
                     >
                         <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="flex gap-1">
-                                <button onClick={() => handleEdit(job)} className="p-2 bg-white/80 hover:bg-white text-zinc-600 rounded-lg shadow-sm border border-zinc-100 transition-all"><CLOCK size={16} /></button>
-                                <button onClick={() => deleteJob(job.id)} className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg shadow-sm border border-red-100 transition-all"><Trash2 size={16} /></button>
+                            <div className="flex gap-2 justify-end">
+                                <button onClick={() => { setEditingId(job.id); setFormData(job); setShowForm(true); }} className="p-2 bg-secondary hover:bg-black/5 text-foreground rounded-lg shadow-sm border border-border transition-all"><Edit2 size={16} /></button>
+                                {isAdmin && (
+                                    <button onClick={() => deleteJob(job.id)} className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg shadow-sm border border-red-100 transition-all"><Trash2 size={16} /></button>
+                                )}
                             </div>
                         </div>
 
@@ -254,5 +254,3 @@ export function Jobs() {
     );
 }
 
-// Fixed Clock import issue (from lucide-react, some tools mis-import)
-const CLOCK = Clock;

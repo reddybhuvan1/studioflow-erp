@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ClientHistoryModal } from './ClientHistoryModal';
 
 export function ClientProfile() {
-    const { clients, sessions, addClient, updateClient, deleteClient } = useApp();
+    const { clients, sessions, addClient, updateClient, deleteClient, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const [isCreating, setIsCreating] = useState(false);
     const [editingClient, setEditingClient] = useState<Client | null>(null);
     const [activeHistoryClient, setActiveHistoryClient] = useState<Client | null>(null);
@@ -190,13 +191,15 @@ export function ClientProfile() {
                                         >
                                             <Edit2 size={18} />
                                         </button>
-                                        <button
-                                            onClick={() => handleDelete(client.id)}
-                                            className="p-2 text-muted-foreground hover:text-destructive transition-colors"
-                                            title="Delete Client"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={() => handleDelete(client.id)}
+                                                    className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg shadow-sm border border-red-100 transition-all opacity-0 group-hover:opacity-100"
+                                                    title="Delete Client"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            )}
                                     </div>
                                 </div>
 

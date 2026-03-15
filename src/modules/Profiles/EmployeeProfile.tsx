@@ -200,34 +200,6 @@ export function EmployeeProfile() {
                                     />
                                 </div>
                                 
-                                <div className="md:col-span-2 space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Module Access Permissions</label>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-6 bg-black/5 rounded-2xl border border-black/5">
-                                        {['Clients', 'Leads', 'Calendar', 'Production', 'Freelancers', 'Expenses', 'Financials', 'Equipment', 'Settings'].map(module => (
-                                            <label key={module} className="flex items-center gap-3 cursor-pointer group">
-                                                <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${formData.permissions.includes(module) ? 'bg-black border-black text-white' : 'border-black/20 bg-white group-hover:border-black/40'}`}>
-                                                    {formData.permissions.includes(module) && <UserCheck size={12} strokeWidth={4} />}
-                                                </div>
-                                                <span className={`text-xs font-bold transition-colors ${formData.permissions.includes(module) ? 'text-black' : 'text-muted-foreground'}`}>{module}</span>
-                                                <input 
-                                                    type="checkbox" 
-                                                    className="hidden" 
-                                                    checked={formData.permissions.includes(module)}
-                                                    onChange={(e) => {
-                                                        const p = formData.permissions;
-                                                        setFormData({
-                                                            ...formData,
-                                                            permissions: e.target.checked 
-                                                                ? [...p, module]
-                                                                : p.filter(m => m !== module)
-                                                        })
-                                                    }}
-                                                />
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
                                 <div className="md:col-span-2 flex justify-end gap-4 mt-4">
                                     <button
                                         type="button"

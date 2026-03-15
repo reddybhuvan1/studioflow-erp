@@ -5,7 +5,8 @@ import type { Session } from '../../types';
 import { motion } from 'framer-motion';
 
 export function EquipmentLedgerModal({ session, onClose }: { session: Session, onClose: () => void }) {
-    const { addClientEquipment, updateClientEquipment, deleteClientEquipment } = useApp();
+    const { addClientEquipment, updateClientEquipment, deleteClientEquipment, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const equipmentList = session.clientEquipment || [];
     
     const [itemName, setItemName] = useState('');
@@ -80,13 +81,15 @@ export function EquipmentLedgerModal({ session, onClose }: { session: Session, o
                                                 </div>
                                             </div>
                                         </div>
-                                        <button 
-                                            onClick={() => { if(window.confirm('Delete this equipment tracking record?')) deleteClientEquipment(item.id) }} 
-                                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all shrink-0"
-                                            title="Delete Item"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
+                                        {isAdmin && (
+                                            <button 
+                                                onClick={() => { if(window.confirm('Delete this equipment tracking record?')) deleteClientEquipment(item.id) }} 
+                                                className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors ml-1 opacity-0 group-hover:opacity-100 shrink-0"
+                                                title="Delete Item"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        )}
                                     </div>
                                 ))}
                             </div>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useApp } from '../../hooks/AppContext';
-import { Package, Plus, Search, ShieldAlert, Tag, Calendar, Wrench } from 'lucide-react';
+import { Package, Plus, Search, ShieldAlert, Tag, Calendar, Wrench, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { EquipmentCategory, EquipmentCondition, EquipmentStatus } from '../../types';
 
 export function InventoryVault() {
-  const { equipment, addEquipment, deleteEquipment } = useApp();
+  const { equipment, addEquipment, deleteEquipment, user } = useApp();
+  const isAdmin = user?.role === 'admin';
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<EquipmentCategory | 'ALL'>('ALL');
   const [isAddingEq, setIsAddingEq] = useState(false);
@@ -195,12 +196,14 @@ export function InventoryVault() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => deleteEquipment(eq.id)}
-                        className="text-gray-500 hover:text-rose-400 transition-colors text-sm font-medium"
-                      >
-                        Remove
-                      </button>
+                      {isAdmin && (
+                          <button
+                            onClick={() => deleteEquipment(eq.id)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                      )}
                     </td>
                   </tr>
                 ))

@@ -25,7 +25,8 @@ const EMPTY_FORM: Omit<Lead, 'id' | 'createdAt'> = {
 };
 
 export function Leads() {
-    const { leads, addLead, updateLead, deleteLead } = useApp();
+    const { leads, addLead, updateLead, deleteLead, user } = useApp();
+    const isAdmin = user?.role === 'admin';
     const [showWelcome, setShowWelcome] = useState(() => !localStorage.getItem('leads_welcomed'));
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -356,9 +357,11 @@ export function Leads() {
                                         <button onClick={() => handleEdit(lead)} className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-all" title="Edit">
                                             <Target size={16} />
                                         </button>
-                                        <button onClick={() => deleteLead(lead.id)} className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                                            <Trash2 size={16} />
-                                        </button>
+                                        {isAdmin && (
+                                            <button onClick={() => deleteLead(lead.id)} className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                             </motion.tr>
